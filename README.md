@@ -6,7 +6,7 @@
   <strong>A modern, unified developer toolkit for Amharic Language Pre-processing 🔧</strong>
 </p>
 <p align="center">
-  <a href="https://felig-toolkit-web.vercel.app/">Felig Tools Web (Live Demo)</a>
+  <a href="https://github.com/Yehonatal/fidel-tools">Felig Tools Web (Live Demo)</a>
 </p>
 
 ---
