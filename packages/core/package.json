@@ -1,0 +1,39 @@
+{
+  "name": "@fidel-tools/core",
+  "version": "2.0.1",
+  "description": "Amharic Language Pre-processor toolkit",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "start": "node dist/index.js",
+    "build": "tsc",
+    "test": "pnpm jest --coverage"
+  },
+  "keywords": [
+    "Amharic",
+    "Stemmer",
+    "Affixes",
+    "Amharic",
+    "Stopword",
+    "Amharic",
+    "Sentiment",
+    "analysis"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/liulalemx/felig-toolkit.git"
+  },
+  "homepage": "https://felig-toolkit-web.vercel.app/",
+  "devDependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.18.6",
+    "@types/node": "^20.2.4",
+    "jest": "^28.1.3",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "@babel/core": "^7.19.0"
+  }
+}
