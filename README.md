@@ -3,141 +3,153 @@
 </p>
 <h1 align="center">Fidel Tools</h1>
 <p align="center">
-  <strong>A modern, unified developer toolkit for Amharic Language Pre-processing 🔧</strong>
+  <strong>A modern toolkit for Amharic language pre-processing</strong>
 </p>
 <p align="center">
-  <a href="https://fidel-tools.vercel.app/">Felig Tools Web (Live Demo)</a>
+  <a href="https://fidel-tools.vercel.app/">Fidel Tools Web Demo</a>
 </p>
 
 ---
 
-## What is Fidel Tools?
+## Overview
 
-**Fidel Tools** is an all-in-one ecosystem for Amharic Natural Language Processing (NLP) and text pre-processing. Built for speed and reliability, it enables developers to analyze, stem, normalize, and index Amharic text corpora with ease.
+Fidel Tools is a pnpm workspace monorepo for Amharic NLP and text pre-processing. The current setup centers on two core pieces:
 
-### Features & Capabilities
+- `@fidel-tools/core`, which exposes the processing pipeline and individual algorithms.
+- `@fidel-tools/lang-am`, which packages the Amharic language data used by the pipeline.
 
-- **Amharic Lexical Analyzer**: Tokenizes Amharic text by removing whitespace, expanding abbreviations (e.g., `አ.አ` &rarr; `አዲስ አበባ`), splitting hyphenated phrases, and filtering punctuation (`፡`, `።`, `!`, `?`, etc.).
-- **Amharic Stopword Remover**: Filters semantic noise by stripping out common conjunctions and auxiliary words (e.g., `እና`, `ስለዚህ`, `በመሆኑም`).
-- **Amharic Transliterator**: Normalizes and converts Unicode Ethiopic characters into clean ASCII equivalents using two systems:
-  - **Felig (Recommended)**: Groups phonetically redundant characters into unified targets to maximize recall.
-  - **SERA (System for Ethiopic Representation in ASCII)**: Strict character-to-symbol phonetic mapping.
-- **Amharic Stemmer**: Recursively strips inflectional and derivational affixes from words using a longest-match algorithm to extract base stems (e.g., `ልጆች` &rarr; `ልጅ`).
-- **Amharic Corpus Indexer**: Builds structural indexes mapping stemmed terms back to source documents and tracks local word frequencies.
-- **Term Weighter (TF-IDF)**: Computes word weights across indexed documents using normalized Term Frequency & Inverse Document Frequency.
+The toolkit covers lexical analysis, stopword removal, stemming, transliteration, document indexing, and term weighting.
+
+## Core API
+
+The main entry point is the `Pipeline` class from `@fidel-tools/core`. It accepts a `LanguagePack` and wraps the lower-level functions in a single interface:
+
+- `stem(word)`
+- `removeStopwords(corpus)`
+- `lexAnalyze(corpus)`
+- `feligTransliterate(word, lang)`
+- `seraTransliterate(word, lang)`
+- `indexDocuments(docs)`
+- `indexQuery(query)`
+- `weighTerms(index, type)`
+
+The shared language pack types are defined in `packages/core/src/types.ts`:
+
+- `LanguagePackMeta`
+- `StemmerConfig`
+- `TransliterationConfig`
+- `LanguagePack`
+
+## Amharic Language Pack
+
+The `@fidel-tools/lang-am` package ships the Amharic pack as JSON and exports it for direct use with the pipeline.
+
+It includes:
+
+- Metadata for the language code, name, and script.
+- Stopwords for filtering common function words.
+- Abbreviations for lexical expansion.
+- Stemmer prefix and suffix lists.
+- Transliteration mappings for both SERA and Felig output.
+
+Example usage:
+
+```ts
+import { Pipeline } from '@fidel-tools/core'
+import amPack from '@fidel-tools/lang-am'
+
+const nlp = new Pipeline(amPack)
+
+const text = 'ት/ቤት እና መስሪያ ቤት'
+const lexed = nlp.lexAnalyze(text)
+const cleaned = nlp.removeStopwords(lexed)
+const stem = nlp.stem('ልጆቻቸውን')
+
+console.log({ lexed, cleaned, stem })
+```
+
+## Demo App
+
+The web app includes an interactive preview console that exercises the pipeline against the Amharic pack. A lightweight mock file-system module is used in the preview layer so the UI can run without depending on browser file APIs during development and testing.
 
 ---
 
 ## Monorepo Architecture
 
-Fidel Tools is structured as a **pnpm workspace monorepo**. This enables atomic development workflows where core libraries, APIs, and client interfaces remain in perfect lockstep.
-
 ```
 fidel-tools/
-├── package.json               ← pnpm workspace root configuration
-├── pnpm-workspace.yaml        ← workspace directories declaration
-├── .github/
-│   └── workflows/
-│       ├── test.yml           ← CI validation running on every PR
-│       ├── publish-npm.yml    ← publishes @fidel-tools/core on release
-│       └── deploy.yml         ← automates API (Docker) & Web builds on merge
-│
+├── package.json
+├── pnpm-workspace.yaml
 ├── packages/
-│   ├── core/                  ← Core JavaScript/TypeScript SDK (@fidel-tools/core)
-│   │   ├── src/               ← Library source files
-│   │   ├── tests/             ← Jest test suite
-│   │   └── package.json
-│   │
-│   └── python/                ← Python port of the core toolkit (fidel-tools)
-│       ├── fidel_tools/       ← Python source package
-│       ├── tests/             ← Python unit tests
-│       └── pyproject.toml
-│
+│   ├── core/
+│   │   ├── src/
+│   │   └── tests/
+│   └── lang-am/
+│       ├── am.json
+│       └── index.ts
 ├── apps/
-│   ├── api/                   ← High-performance Hono REST API
-│   │   ├── src/               
-│   │   │   ├── routes/        ← Endpoint handlers
-│   │   │   ├── middleware/    ← Auth & rate limiters
-│   │   │   └── index.ts       
-│   │   ├── Dockerfile         ← Container configuration
-│   │   └── package.json       
-│   │
-│   └── web/                   ← React static landing page & demo app
-│       ├── src/               
-│       └── package.json       
-│
-└── docs/                      ← Documentation site (Docusaurus/Starlight)
-    └── README.md
+│   ├── api/
+│   └── web/
+└── docs/
 ```
 
 ### Workspace Relationships
 
 ```
-packages/core  <──────────────  apps/api
+packages/core  <──────────────  packages/lang-am
      ▲                               ▲
-     │                          apps/web (calls API for interactive demo)
-     │
-packages/python  (independent Python port of core logic)
+     │                               │
+     ├────────────── apps/api        └────────── apps/web
 ```
 
-- `apps/api` depends on `@fidel-tools/core` as a local workspace dependency via `"@fidel-tools/core": "workspace:*"`.
-- pnpm links dependencies automatically. When you modify `packages/core`, modifications are immediately reflected in `apps/api` during local development without needing an intermediate publication step.
+- `apps/api` depends on `@fidel-tools/core` through the local workspace.
+- `apps/web` depends on both `@fidel-tools/core` and `@fidel-tools/lang-am` for the preview console.
+- pnpm links workspace packages automatically, so local changes are reflected immediately across the repo.
 
 ---
 
-## Tooling Choices
-
-| Concern | Selected Tool | Why? |
-| :--- | :--- | :--- |
-| **Workspace Manager** | `pnpm Workspaces` | Built-in monorepo support, fast, disk-efficient dependency linking. |
-| **API Framework** | `Hono` | Lightweight, fast execution, multi-runtime support (Node/Edge). |
-| **Web Frontend** | `React + Vite` | Fast HMR, modular UI building, easy static deployments. |
-| **Python Toolchain** | `pyproject.toml` + `hatchling` | Modern PEP 621 Python packaging standards. |
-| **CI / CD** | `GitHub Actions` | Automated workspace testing, NPM publishing, and Docker builds. |
-| **Containerization** | `Docker` | Containerized API runtime suited for cloud and self-hosted environments. |
-
----
-
-## Development Guide
+## Development
 
 ### Prerequisites
-- [Node.js](https://nodejs.org) (v20+ recommended)
-- [pnpm](https://pnpm.io) (v9+ recommended)
 
-### Setup & Installation
-At the monorepo root directory, run:
+- [Node.js](https://nodejs.org) v20+ recommended
+- [pnpm](https://pnpm.io) v9+ recommended
+
+### Setup
+
+Install dependencies from the monorepo root:
+
 ```bash
 pnpm install
 ```
-This installs all workspace dependencies and establishes local package symlinks.
 
 ### Workspace Commands
 
-- **Build Core Package**:
-  ```bash
-  pnpm --filter @fidel-tools/core build
-  ```
-- **Run Unit Tests**:
-  ```bash
-  pnpm --filter @fidel-tools/core test
-  ```
-- **Run API Dev Server**:
-  ```bash
-  pnpm --filter @fidel-tools/api dev
-  ```
-- **Run Web Dev Server**:
-  ```bash
-  pnpm --filter @fidel-tools/web dev
-  ```
+- Build everything: `pnpm build`
+- Run tests: `pnpm test`
+- Build the core package only: `pnpm --filter @fidel-tools/core build`
+- Run core tests only: `pnpm --filter @fidel-tools/core test`
+- Start the API: `pnpm --filter @fidel-tools/api dev`
+- Start the web demo: `pnpm --filter @fidel-tools/web dev`
+
+### Quick Start
+
+```ts
+import { Pipeline } from '@fidel-tools/core'
+import amPack from '@fidel-tools/lang-am'
+
+const nlp = new Pipeline(amPack)
+console.log(nlp.removeStopwords('እና በመሆኑም ት/ቤት'))
+```
 
 ---
 
 ## Attribution
 
-To design and implement these pre-processing engines, the following academic research and publications were referenced:
+The processing logic in this project draws on research and references in Amharic NLP and Ethiopic transliteration:
 
 - [Girma Neshir Alemneh. “Amharic Light Stemmer”. ResearchGate. Sep 2020.](https://www.researchgate.net/publication/344285263_Amharic_Light_Stemmer)
-- [Genet Mezemir Fikremariam. ”Automatic Stemming for Amharic text: An experiment using successor variety approach”. AAU. Jan 2009.](http://etd.aau.edu.et/bitstream/handle/123456789/14590/Genet%20Mezemir.pdf?sequence=1&isAllowed=y)
+- [Genet Mezemir Fikremariam. “Automatic Stemming for Amharic text: An experiment using successor variety approach”. AAU. Jan 2009.](http://etd.aau.edu.et/bitstream/handle/123456789/14590/Genet%20Mezemir.pdf?sequence=1&isAllowed=y)
 - [Tessema Mindaye Mengistu. “Design and Implementation of Amharic Search Engine”. ResearchGate. August 2007.](https://www.researchgate.net/publication/323384408_Design_and_Implementation_of_Amharic_Search_Engine)
 - [Yitna Firdyiwek and Daniel Yaqob. “The System for Ethiopic Representation in ASCII”. ResearchGate. Jan 1997.](https://www.researchgate.net/publication/2682324_The_System_for_Ethiopic_Representation_in_ASCII)
 
