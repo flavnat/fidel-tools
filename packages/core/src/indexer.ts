@@ -1,86 +1,39 @@
-// @ts-nocheck
-
 import fs from "fs"
 import stem from "./stemmer.js"
 import lexAnalyze from "./lexical_analyzer.js"
 import rmvStopwrd from "./stopword_remover.js"
+import type { LanguagePack } from './types.js'
 
-const indexData = {}
+// Pure interfaces — no fs
+export interface DocIndexData {
+  corpus_size: number
+  corpus_word_count: Record<string, number>
+  words: Record<string, Array<Record<string, number>>>
+}
 
-function indexTerms(
-  corpus: string[],
-  outputIndexFilePath: string,
-  type: "doc" | "query"
-) {
-  if (type === "doc") {
-    // Documnets
-    const filesArray = corpus
-    indexData["corpus_size"] = filesArray.length
-    indexData["corpus_word_count"] = {}
-    indexData["words"] = {}
+export interface QueryIndexData {
+  corpus_size: number
+  corpus_word_count: number
+  words: Record<string, number>
+}
 
-    const indexPath = outputIndexFilePath + "/docIndexFile.json"
+// Pure functions — no fs dependency
+export function indexDocuments(
+  docs: Array<{ id: string; content: string }>,
+  pack: LanguagePack
+): DocIndexData {
+  const indexData: DocIndexData = {
+    corpus_size: docs.length,
+    corpus_word_count: {},
+    words: {}
+  }
 
-    filesArray.forEach((filePath) => {
-      try {
-        // read files
-        const fileContents = fs.readFileSync(filePath, "utf8")
-
-        indexData["corpus_word_count"][filePath] =
-          fileContents.split(" ").length
-
-        // preprocess
-        const unStemmedWords = rmvStopwrd(lexAnalyze(fileContents)).split(" ")
-        const stemmedWords = unStemmedWords.map((word) => stem(word))
-        const result = stemmedWords
-          .filter((e) => e)
-          .filter((e) => {
-            return e.length > 1
-          })
-
-        // index
-        let wordFlag = 0
-        result.forEach((word) => {
-          if (word in indexData["words"]) {
-            indexData.words[word].forEach((pathObj) => {
-              if (filePath in pathObj) {
-                pathObj[filePath]++
-                wordFlag = 1
-              }
-            })
-            if (wordFlag === 0) {
-              indexData.words[word].push({ [filePath]: 1 })
-            } else {
-              wordFlag = 0
-            }
-          } else {
-            indexData.words[word] = [{ [filePath]: 1 }]
-          }
-        })
-
-        const jsonString = JSON.stringify(indexData, null, 2)
-
-        try {
-          fs.writeFileSync(indexPath, jsonString)
-          console.log(`Contents of ${filePath} successfully added to index`)
-        } catch (error) {
-          console.log("Index creation failed", error)
-        }
-      } catch (error) {
-        console.log(`Error reading ${filePath} file from disk:`, error)
-      }
-    })
-  } else if (type === "query") {
-    // Query
-    indexData["corpus_size"] = 1
-    indexData["corpus_word_count"] = corpus.split(" ").length
-    indexData["words"] = {}
-
-    const indexPath = outputIndexFilePath + "/queryIndexFile.json"
+  docs.forEach((doc) => {
+    indexData.corpus_word_count[doc.id] = doc.content.split(" ").length
 
     // preprocess
-    const unStemmedWords = rmvStopwrd(lexAnalyze(corpus)).split(" ")
-    const stemmedWords = unStemmedWords.map((word) => stem(word))
+    const unStemmedWords = rmvStopwrd(lexAnalyze(doc.content, pack), pack).split(" ")
+    const stemmedWords = unStemmedWords.map((word) => stem(word, pack))
     const result = stemmedWords
       .filter((e) => e)
       .filter((e) => {
@@ -88,18 +41,90 @@ function indexTerms(
       })
 
     // index
+    let wordFlag = 0
     result.forEach((word) => {
-      if (word in indexData["words"]) {
-        indexData.words[word]++
+      if (word in indexData.words) {
+        indexData.words[word].forEach((pathObj) => {
+          if (doc.id in pathObj) {
+            pathObj[doc.id]++
+            wordFlag = 1
+          }
+        })
+        if (wordFlag === 0) {
+          indexData.words[word].push({ [doc.id]: 1 })
+        } else {
+          wordFlag = 0
+        }
       } else {
-        indexData.words[word] = 1
+        indexData.words[word] = [{ [doc.id]: 1 }]
       }
     })
+  })
 
-    const jsonString = JSON.stringify(indexData, null, 2)
+  return indexData
+}
 
+export function indexQuery(
+  query: string,
+  pack: LanguagePack
+): QueryIndexData {
+  const indexData: QueryIndexData = {
+    corpus_size: 1,
+    corpus_word_count: query.split(" ").length,
+    words: {}
+  }
+
+  // preprocess
+  const unStemmedWords = rmvStopwrd(lexAnalyze(query, pack), pack).split(" ")
+  const stemmedWords = unStemmedWords.map((word) => stem(word, pack))
+  const result = stemmedWords
+    .filter((e) => e)
+    .filter((e) => {
+      return e.length > 1
+    })
+
+  // index
+  result.forEach((word) => {
+    if (word in indexData.words) {
+      indexData.words[word]++
+    } else {
+      indexData.words[word] = 1
+    }
+  })
+
+  return indexData
+}
+
+// Backwards-compat Node.js wrapper — fs lives here only
+export function indexTerms(
+  corpus: string[],
+  outputIndexFilePath: string,
+  type: "doc" | "query",
+  pack: LanguagePack
+): void {
+  if (type === "doc") {
+    const docs = corpus.map(filePath => {
+      try {
+        const content = fs.readFileSync(filePath, 'utf8')
+        return { id: filePath, content }
+      } catch (error) {
+        console.log(`Error reading ${filePath} file from disk:`, error)
+        return { id: filePath, content: "" }
+      }
+    })
+    const result = indexDocuments(docs, pack)
     try {
-      fs.writeFileSync(indexPath, jsonString)
+      fs.writeFileSync(outputIndexFilePath + '/docIndexFile.json', JSON.stringify(result, null, 2))
+      docs.forEach(doc => {
+        console.log(`Contents of ${doc.id} successfully added to index`)
+      })
+    } catch (error) {
+      console.log("Index creation failed", error)
+    }
+  } else {
+    try {
+      const result = indexQuery(corpus as unknown as string, pack)
+      fs.writeFileSync(outputIndexFilePath + '/queryIndexFile.json', JSON.stringify(result, null, 2))
       console.log(`Contents of Query successfully added to index`)
     } catch (error) {
       console.log("Index creation failed", error)

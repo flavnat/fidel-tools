@@ -1,4 +1,10 @@
-import stem from "../dist/stemmer.js"
+import { stem } from "../dist/stemmer.js"
+import fs from "fs"
+import { resolve } from "path"
+
+const amPack = JSON.parse(
+  fs.readFileSync(resolve(__dirname, "../../lang-am/am.json"), "utf8")
+)
 
 const amh_testWords_input = [
   "ወንበር",
@@ -120,6 +126,6 @@ test("Takes Amharic language words and produces a stem", () => {
     const amh_input = amh_testWords_input[index]
     const amh_output = amh_testWords_output[index]
 
-    expect(stem(amh_input)).toBe(amh_output)
+    expect(stem(amh_input, amPack)).toBe(amh_output)
   }
 })

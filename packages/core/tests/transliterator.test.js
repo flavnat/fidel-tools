@@ -1,4 +1,10 @@
 import transliterate from "../dist/transliterator.js"
+import fs from "fs"
+import { resolve } from "path"
+
+const amPack = JSON.parse(
+  fs.readFileSync(resolve(__dirname, "../../lang-am/am.json"), "utf8")
+)
 
 const amh_testWords_input = [
   "ወንበር",
@@ -173,8 +179,8 @@ test("Amharic to ASCII transliterator", () => {
     const amh_output = en_expected_output[index]
     const english = en_testWords[index]
 
-    expect(transliterate.felig_transliterate(amh_input, "am")).toBe(english)
+    expect(transliterate.felig_transliterate(amh_input, "am", amPack)).toBe(english)
 
-    expect(transliterate.felig_transliterate(english, "en")).toBe(amh_output)
+    expect(transliterate.felig_transliterate(english, "en", amPack)).toBe(amh_output)
   }
 })

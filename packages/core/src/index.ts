@@ -1,18 +1,13 @@
-import stem from "./stemmer.js"
-import { sera_transliterate, felig_transliterate } from "./transliterator.js"
-import lexAnalyze from "./lexical_analyzer.js"
-import rmvStopwrd from "./stopword_remover.js"
-import indexer from "./indexer.js"
-import weigh_terms from "./term_weighter.js"
+// Types
+export type { LanguagePack, LanguagePackMeta, StemmerConfig, TransliterationConfig } from './types.js'
 
-const felig_toolkit = {
-  stem,
-  sera_transliterate,
-  felig_transliterate,
-  lexAnalyze,
-  rmvStopwrd,
-  indexer,
-  weigh_terms,
-}
+// Pipeline (primary API)
+export { Pipeline } from './pipeline.js'
 
-export default felig_toolkit
+// Individual functions (secondary API, for tree-shaking)
+export { stem } from './stemmer.js'
+export { removeStopwords } from './stopword_remover.js'
+export { lexAnalyze } from './lexical_analyzer.js'
+export { felig_transliterate, sera_transliterate } from './transliterator.js'
+export { indexDocuments, indexQuery, indexTerms } from './indexer.js'
+export { weighTerms, weigh_terms } from './term_weighter.js'
