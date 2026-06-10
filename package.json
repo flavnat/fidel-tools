@@ -1,12 +1,16 @@
 {
-  "name": "fidel-tools-monorepo",
-  "version": "1.0.0",
-  "private": true,
-  "scripts": {
-    "build": "pnpm --filter \"@fidel-tools/*\" build",
-    "test": "pnpm --filter \"@fidel-tools/*\" test"
-  },
-  "devDependencies": {
-    "typescript": "^5.0.4"
-  }
+    "name": "fidel-tools-monorepo",
+    "version": "1.0.0",
+    "private": true,
+    "engines": {
+        "node": "22.x"
+    },
+    "packageManager": "pnpm@10.28.0",
+    "scripts": {
+        "build": "pnpm --filter ./packages/core build && pnpm --filter ./packages/lang-am build && pnpm --filter ./apps/web build",
+        "test": "pnpm --filter \"@fidel-tools/*\" test"
+    },
+    "devDependencies": {
+        "typescript": "^5.0.4"
+    }
 }
