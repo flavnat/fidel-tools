@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "prebuild": "pnpm --filter @fidel-tools/core build && pnpm --filter @fidel-tools/lang-am build",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
