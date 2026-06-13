@@ -18,5 +18,7 @@ export interface PipelineLike {
 
 export interface LanguagePackLike {
     stopwords: string[];
-    abbreviations: Record<string, string>;
+    tokenization?: {
+        exceptions: Record<string, string[]>;
+    };
 }

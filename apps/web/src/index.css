@@ -1264,9 +1264,9 @@ body.dark .modal-close-btn:hover {
 .dc-code-content {
     padding: 1rem;
     margin: 0;
-    overflow: auto;
+    overflow-y: scroll;
     flex: 1;
-    max-height: 320px;
+    height: 380px;
 }
 
 .dc-code-content code {
@@ -1278,14 +1278,17 @@ body.dark .modal-close-btn:hover {
 
 /* ── Output Panel ── */
 .dc-output-panel {
-    min-height: 350px;
+    display: flex;
+    flex-direction: column;
 }
 
 .dc-output-body {
     padding: 1rem;
-    overflow: auto;
+    overflow-y: scroll;
     flex: 1;
-    max-height: 400px;
+    height: 380px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 /* ── Flow Visualizer (Pipeline) ── */
@@ -1293,6 +1296,8 @@ body.dark .modal-close-btn:hover {
     display: flex;
     flex-direction: column;
     gap: 6px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .dc-flow-step {
@@ -1383,6 +1388,8 @@ body.dark .modal-close-btn:hover {
     display: flex;
     flex-direction: column;
     gap: 0.85rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .dc-result-label {
@@ -1699,6 +1706,7 @@ body.dark .modal-close-btn:hover {
 /* ── Homepage Redesign Grid & Styles ── */
 .hc-body {
     grid-template-columns: 1.1fr 0.9fr !important;
+    align-items: stretch;
 }
 
 .hc-hero-panel {
@@ -1711,9 +1719,8 @@ body.dark .modal-close-btn:hover {
 .hc-hero-content {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    align-items: flex-start;
+    text-align: left;
     width: 100%;
 }
 
@@ -1794,4 +1801,43 @@ body.dark .modal-close-btn:hover {
         transform: translate(-50%, -50%) scale(6);
         opacity: 0;
     }
+}
+
+/* ── Pagination Styles ── */
+.dc-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.5rem 0.25rem;
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.dc-pagination-btn {
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 4px 12px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.dc-pagination-btn:hover:not(:disabled) {
+    background: var(--accent-blue);
+    color: #fff;
+    border-color: var(--accent-blue);
+}
+
+.dc-pagination-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+.dc-pagination-info {
+    font-size: 0.72rem;
+    color: var(--text-tertiary);
+    font-weight: 500;
 }

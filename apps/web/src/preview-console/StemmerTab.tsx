@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import type { PipelineLike } from "./types";
 
@@ -7,6 +8,9 @@ interface StemmerTabProps {
 }
 
 export default function StemmerTab({ inputText, nlp }: StemmerTabProps) {
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
     const stemmedWords = nlp
         .lexAnalyze(inputText)
         .split(/\s+/)
@@ -16,6 +20,10 @@ export default function StemmerTab({ inputText, nlp }: StemmerTabProps) {
             stemmed: nlp.stem(word),
         }));
 
+    const totalPages = Math.ceil(stemmedWords.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedWords = stemmedWords.slice(startIndex, startIndex + itemsPerPage);
+
     return (
         <div className="dc-table-wrapper">
             <div className="dc-table-header">
@@ -24,7 +32,7 @@ export default function StemmerTab({ inputText, nlp }: StemmerTabProps) {
                 <span>Stemmed</span>
             </div>
             <div className="dc-table-body">
-                {stemmedWords.map((item, idx) => (
+                {paginatedWords.map((item, idx) => (
                     <div key={idx} className="dc-table-row">
                         <span className="dc-cell-original">
                             {item.original}
@@ -36,6 +44,27 @@ export default function StemmerTab({ inputText, nlp }: StemmerTabProps) {
                     </div>
                 ))}
             </div>
+            {totalPages > 1 && (
+                <div className="dc-pagination">
+                    <button
+                        className="dc-pagination-btn"
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                    >
+                        Previous
+                    </button>
+                    <span className="dc-pagination-info">
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        className="dc-pagination-btn"
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

@@ -132,7 +132,9 @@ function App() {
             setEmail("");
 
             // Fire request in background without holding up the user interface
-            const apiUrl = (import.meta as any).env?.VITE_API_URL || "http://localhost:3000";
+            const apiUrl =
+                (import.meta as any).env?.VITE_API_URL ||
+                "http://localhost:3000";
             fetch(`${apiUrl}/notify`, {
                 method: "POST",
                 headers: {
@@ -429,7 +431,7 @@ function App() {
                                     color: "var(--text-tertiary)",
                                     lineHeight: "1.6",
                                     maxWidth: "520px",
-                                    margin: "0 auto 2rem",
+                                    margin: "0 0 2rem 0",
                                 }}
                             >
                                 Masterfully crafted packages for the modern
@@ -442,7 +444,7 @@ function App() {
                                 className="countdown-container"
                                 style={{
                                     display: "flex",
-                                    justifyContent: "center",
+                                    justifyContent: "flex-start",
                                     gap: "0.5rem",
                                     marginBottom: "2.5rem",
                                 }}
@@ -492,7 +494,7 @@ function App() {
                                     style={{
                                         width: "100%",
                                         maxWidth: "480px",
-                                        margin: "0 auto 2rem",
+                                        margin: "0 0 2rem 0",
                                     }}
                                 >
                                     <input
@@ -515,7 +517,7 @@ function App() {
                             ) : (
                                 <div
                                     className="success-message"
-                                    style={{ margin: "0 auto 2rem" }}
+                                    style={{ margin: "0 0 2rem 0" }}
                                 >
                                     ✓ Thanks! We'll notify you as soon as we
                                     launch.

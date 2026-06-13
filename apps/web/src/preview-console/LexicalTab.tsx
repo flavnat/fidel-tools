@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { LanguagePackLike } from "./types";
 import { sanitizeToken } from "./utils";
 
@@ -10,15 +11,23 @@ export default function LexicalTab({
     inputText,
     languagePack,
 }: LexicalTabProps) {
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
+
     const lexicalItems = inputText.split(/\s+/).map((word) => {
         const clean = sanitizeToken(word);
-        const expansion = languagePack.abbreviations[clean];
+        const expansionList = languagePack.tokenization?.exceptions?.[clean];
+        const expansion = expansionList ? expansionList.join(" ") : null;
         return {
             original: word,
-            expanded: expansion || null,
-            isAbbreviation: Boolean(expansion),
+            expanded: expansion,
+            isAbbreviation: Boolean(expansionList),
         };
     });
+
+    const totalPages = Math.ceil(lexicalItems.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const paginatedItems = lexicalItems.slice(startIndex, startIndex + itemsPerPage);
 
     return (
         <div className="dc-table-wrapper">
@@ -28,7 +37,7 @@ export default function LexicalTab({
                 <span>Type</span>
             </div>
             <div className="dc-table-body">
-                {lexicalItems.map((item, idx) => (
+                {paginatedItems.map((item, idx) => (
                     <div
                         key={idx}
                         className={`dc-table-row dc-table-lexical ${item.isAbbreviation ? "dc-row-highlight" : ""}`}
@@ -47,6 +56,27 @@ export default function LexicalTab({
                     </div>
                 ))}
             </div>
+            {totalPages > 1 && (
+                <div className="dc-pagination">
+                    <button
+                        className="dc-pagination-btn"
+                        onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                        disabled={currentPage === 1}
+                    >
+                        Previous
+                    </button>
+                    <span className="dc-pagination-info">
+                        Page {currentPage} of {totalPages}
+                    </span>
+                    <button
+                        className="dc-pagination-btn"
+                        onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next
+                    </button>
+                </div>
+            )}
         </div>
     );
 }

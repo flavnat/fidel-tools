@@ -214,7 +214,7 @@ console.log(cleaned); // → "ትምህርት ቤት እና መስሪያ ቤት"
                                 <span>Abbreviations</span>
                                 <span className="dc-meta-val">
                                     {
-                                        Object.keys(languagePack.abbreviations)
+                                        Object.keys(languagePack.tokenization?.exceptions || {})
                                             .length
                                     }
                                 </span>
