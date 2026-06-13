@@ -36,7 +36,8 @@ app.route("/api/v1/nlp", nlpRouter);
 app.get("/", (c) => {
     return c.json({
         name: "fidel-tools-api",
-        description: "Production-ready OpenAPI-compliant API for Amharic NLP pre-processing",
+        description:
+            "Production-ready OpenAPI-compliant API for Amharic NLP pre-processing",
         version: "1.0.0",
         status: "operational",
         documentation: "/docs",
@@ -54,7 +55,8 @@ app.doc("/openapi.json", {
     info: {
         title: "ፊደል Tools API",
         version: "1.0.0",
-        description: "ፊደል (Fidel) Tools is a developer-first suite of high-performance natural language processing APIs built specifically for Ethiopic languages. This reference provides interactive documentation for our production-grade NLP preprocessing endpoints (normalization, tokenization, stopword removal, morphological stemming, transliteration).",
+        description:
+            "ፊደል (Fidel) Tools is a developer-first suite of high-performance natural language processing APIs built specifically for Ethiopic languages. This reference provides interactive documentation for our production-grade NLP preprocessing endpoints (normalization, tokenization, stopword removal, morphological stemming, transliteration).",
     },
 });
 
@@ -133,6 +135,8 @@ const customCss = `
   .download-client,
   .download-button,
   .api-client-section,
+  .scalar-reference-intro-clients,
+  
   [data-testid="client-libraries"] {
     display: none !important;
   }
@@ -154,7 +158,10 @@ app.get("/docs", (c, next) => {
 // Unhandled error recovery handler
 app.onError((err, c) => {
     console.error("Unhandled API Exception:", err);
-    return c.json({ error: "Internal Server Error", message: err.message }, 500);
+    return c.json(
+        { error: "Internal Server Error", message: err.message },
+        500,
+    );
 });
 
 // Start serve instance
