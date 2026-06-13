@@ -1,6 +1,6 @@
 {
     "name": "@fidel-tools/validate-pack",
-    "version": "0.1.0",
+    "version": "0.1.4",
     "description": "Validation tool for Fidel Tools language packs",
     "type": "module",
     "main": "dist/index.js",

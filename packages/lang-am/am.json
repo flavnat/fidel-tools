@@ -4,7 +4,7 @@
         "name": "Amharic",
         "native_name": "አማርኛ",
         "script": "ethiopic",
-        "version": "0.1.0",
+        "version": "0.1.4",
         "authors": [
             "fidel-tools"
         ]

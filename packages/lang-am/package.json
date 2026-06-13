@@ -1,6 +1,6 @@
 {
   "name": "@fidel-tools/lang-am",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "description": "Amharic language pack for Fidel Tools",
   "type": "module",
   "main": "dist/index.js",
