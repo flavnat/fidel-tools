@@ -1,3 +1,4 @@
+import "dotenv/config";
 import pg from "pg";
 const { Pool } = pg;
 
@@ -7,9 +8,11 @@ if (!connectionString) {
     console.warn("WARNING: DATABASE_URL is not set. Database operations will fail.");
 }
 
+const isLocal = !connectionString || connectionString.includes("localhost") || connectionString.includes("127.0.0.1");
+
 export const pool = new Pool({
     connectionString,
-    ssl: {
+    ssl: isLocal ? false : {
         rejectUnauthorized: false,
     },
 });

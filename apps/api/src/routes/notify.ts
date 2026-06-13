@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { pool } from "../db.js";
 import { rateLimiter } from "../middleware/rateLimiter.js";
+import { z } from "zod";
 
 const notifyRouter = new Hono();
 
@@ -11,7 +12,6 @@ notifyRouter.use(
         windowMs: 60 * 1000,
         max: 10,
         keyGenerator: (c) => {
-            // Retrieve client IP address
             const forwarded = c.req.header("x-forwarded-for");
             if (forwarded) {
                 return forwarded.split(",")[0].trim();
@@ -21,13 +21,20 @@ notifyRouter.use(
     }),
 );
 
+// Subscribe route: standard validation via standard Zod schema parser (not exposed to OpenAPI/Scalar)
 notifyRouter.post("/", async (c) => {
     try {
-        const { email } = await c.req.json();
-        if (!email || typeof email !== "string" || !email.includes("@")) {
+        const body = await c.req.json().catch(() => ({}));
+        const schema = z.object({
+            email: z.string().email(),
+        });
+
+        const parseResult = schema.safeParse(body);
+        if (!parseResult.success) {
             return c.json({ error: "Invalid email address" }, 400);
         }
 
+        const { email } = parseResult.data;
         const emailLower = email.trim().toLowerCase();
 
         // Insert email into PostgreSQL database, avoiding duplicates via ON CONFLICT
@@ -36,11 +43,11 @@ notifyRouter.post("/", async (c) => {
             [emailLower],
         );
 
-        return c.json({ success: true, message: "Subscribed successfully" });
+        return c.json({ success: true, message: "Subscribed successfully" }, 200);
     } catch (error: any) {
         console.error("Subscription endpoint error:", error);
         return c.json(
-            { error: "Internal server error", details: error.message },
+            { error: "Internal server error" },
             500,
         );
     }

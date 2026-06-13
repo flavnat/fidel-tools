@@ -12,8 +12,12 @@
     "@fidel-tools/core": "workspace:*",
     "@fidel-tools/lang-am": "workspace:*",
     "@hono/node-server": "^2.0.4",
+    "@hono/zod-openapi": "^1.4.0",
+    "@scalar/hono-api-reference": "^0.11.3",
+    "dotenv": "^17.4.2",
     "hono": "^4.0.0",
-    "pg": "^8.21.0"
+    "pg": "^8.21.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
     "@types/node": "^25.9.3",

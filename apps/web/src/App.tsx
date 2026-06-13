@@ -8,11 +8,14 @@ import {
     Code2,
     Copy,
     Check,
+    BookOpen,
 } from "lucide-react";
 import PreviewPage from "./PreviewPage.tsx";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { Toaster, toast } from "sonner";
+
+const API_URL = (import.meta as any).env?.VITE_API_URL || "http://localhost:3000";
 
 interface ModalData {
     title: string;
@@ -31,8 +34,10 @@ function App() {
     const [modal, setModal] = useState<ModalData | null>(null);
     const [logoClicks, setLogoClicks] = useState(0);
     const [isBursting, setIsBursting] = useState(false);
-    const [currentPage, setCurrentPage] = useState<"home" | "preview">(() => {
-        return window.location.pathname === "/preview" ? "preview" : "home";
+    const [currentPage, setCurrentPage] = useState<"home" | "preview" | "docs">(() => {
+        if (window.location.pathname === "/preview") return "preview";
+        if (window.location.pathname === "/docs") return "docs";
+        return "home";
     });
 
     // Fresh load loading screen
@@ -58,21 +63,21 @@ function App() {
 
     useEffect(() => {
         const handlePopState = () => {
-            setCurrentPage(
-                window.location.pathname === "/preview" ? "preview" : "home",
-            );
+            const path = window.location.pathname;
+            if (path === "/preview") setCurrentPage("preview");
+            else if (path === "/docs") setCurrentPage("docs");
+            else setCurrentPage("home");
         };
         window.addEventListener("popstate", handlePopState);
         return () => window.removeEventListener("popstate", handlePopState);
     }, []);
 
-    const navigateTo = (page: "home" | "preview") => {
+    const navigateTo = (page: "home" | "preview" | "docs") => {
         setCurrentPage(page);
-        window.history.pushState(
-            null,
-            "",
-            page === "preview" ? "/preview" : "/",
-        );
+        let path = "/";
+        if (page === "preview") path = "/preview";
+        if (page === "docs") path = "/docs";
+        window.history.pushState(null, "", path);
     };
 
     const handleLogoClick = () => {
@@ -266,6 +271,27 @@ function App() {
                     theme={theme}
                     toggleTheme={toggleTheme}
                 />
+            ) : currentPage === "docs" ? (
+                <div className="w-full min-h-screen flex flex-col relative z-10">
+                    <div className="flex justify-between items-center p-4 bg-white/65 dark:bg-[#0c0c0e]/75 backdrop-blur-xl border-b border-slate-200/50 dark:border-white/5 shadow-sm">
+                        <div className="flex items-center gap-2">
+                            <img src="/Fidel.png" alt="Fidel Logo" className="h-6 w-auto" />
+                            <span className="text-slate-900 dark:text-white font-bold font-loga text-sm tracking-wide">ፊደል Tools API Reference</span>
+                        </div>
+                        <button
+                            onClick={() => navigateTo("home")}
+                            className="bg-transparent border border-slate-200 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200 text-xs font-semibold px-2.5 py-1.5 rounded-lg cursor-pointer transition-all duration-200"
+                        >
+                            Back to Home
+                        </button>
+                    </div>
+                    <iframe 
+                        src={`${API_URL}/docs?theme=${theme}`} 
+                        className="w-full flex-grow h-[calc(100vh-60px)] border-none bg-transparent"
+                        allowTransparency={true}
+                        title="ፊደል Tools API Documentation"
+                    />
+                </div>
             ) : (
                 <div className="w-full max-w-[1400px] mx-auto px-4 md:px-6 py-4 md:py-6 flex flex-col gap-4 relative z-10 font-jakarta">
                     {/* ─── Top Bar (Mobile First Stacking) ─── */}
@@ -315,6 +341,13 @@ function App() {
                                     className="bg-transparent border border-slate-200 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200 text-xs font-semibold px-2.5 py-1.5 rounded-lg cursor-pointer transition-all duration-200"
                                 >
                                     Terms
+                                </button>
+                                <button
+                                    onClick={() => navigateTo("docs")}
+                                    className="bg-transparent border border-slate-200 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-zinc-200 text-xs font-semibold px-2.5 py-1.5 rounded-lg cursor-pointer transition-all duration-200 inline-flex items-center gap-1"
+                                >
+                                    <BookOpen size={12} />
+                                    Docs
                                 </button>
                             </div>
 
@@ -446,13 +479,20 @@ function App() {
                                     </div>
                                 )}
 
-                                <div className="mt-4">
+                                <div className="mt-4 flex flex-col sm:flex-row gap-3">
                                     <button
                                         onClick={() => navigateTo("preview")}
                                         className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs md:text-sm px-5 py-2.5 rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.15)] cursor-pointer active:scale-95 transition-all duration-200 w-full sm:w-auto"
                                     >
                                         <Play size={12} className="text-white fill-white" />
                                         Try the Interactive Demo
+                                    </button>
+                                    <button
+                                        onClick={() => navigateTo("docs")}
+                                        className="inline-flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 font-semibold text-xs md:text-sm px-5 py-2.5 rounded-xl border border-slate-200/50 dark:border-zinc-700/50 cursor-pointer active:scale-95 transition-all duration-200 w-full sm:w-auto"
+                                    >
+                                        <BookOpen size={12} />
+                                        View API Docs
                                     </button>
                                 </div>
                             </div>
