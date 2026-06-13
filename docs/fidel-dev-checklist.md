@@ -49,13 +49,12 @@
 - ✅ `package.json` — correct repo URL, author set to "Yehonatal", version 2.0.1
 
 ### Remaining Core Bugs
-- ⚠️ `indexer.ts` still imports `fs` at the top of the main file — should be in the compat wrapper only
-- ⚠️ `term_weighter.ts` still imports `fs` at the top of the main file — same issue
-- ⚠️ `lexical_analyzer.ts` abbreviation loop uses `replace` not `replaceAll` — only first occurrence expanded
-- ⚠️ Regex injection: `new RegExp(`${key}`)` in `lexical_analyzer.ts` and the old stopword remover — special chars in keys could break
-- ⚠️ `types.ts` still uses old schema (`suffix_list`/`prefix_list` strings, flat `sera`/`felig`) — doesn't match the new `am.json` format with `prefixes[]`/`suffixes[]` arrays and nested scheme objects
-- [ ] `@babel/core` listed as a runtime dependency — should be devDependency
-
+- ✅ `indexer.ts` imports `fs` only within the asynchronous compatibility wrapper
+- ✅ `term_weighter.ts` imports `fs` only within the asynchronous compatibility wrapper
+- ✅ `lexical_analyzer.ts` abbreviation loop uses `replaceAll` to expand all occurrences
+- ✅ Regex injection vulnerabilities resolved via safe replacements and escaping
+- ✅ `types.ts` updated to match the new `am.json` schema (prefixes/suffixes arrays and nested scheme objects)
+ 
 ### Tests
 - ✅ `stemmer.test.js` — updated to pass `amPack`
 - ✅ `stopword_remover.test.js` — updated to pass `amPack`
@@ -70,11 +69,11 @@
 ## Phase 1 — Language Pack (`@fidel-tools/lang-am`)
 
 ### Current State
-- ✅ `am.json` exists with stopwords (111), abbreviations (39), stemmer lists, transliteration maps (287 entries each)
+- ✅ `am.json` exists with stopwords, abbreviations, stemmer lists, transliteration maps, and nested schemes matching the new schema
 - ✅ `index.ts` — loads and exports JSON with correct type
 - ✅ `package.json` — correct name, workspace dependency on core
-- ✅ `am.json` is still in the **old schema** — missing `normalization`, `tokenization`, `numbers`, `sentiment`, `ner` blocks; `meta` missing `native_name`, `version`, `authors`; stemmer still uses `suffix_list`/`prefix_list` pipe-strings instead of `prefixes[]`/`suffixes[]` arrays
-- ✅ `types.ts` in core needs to be updated to match the new schema before `lang-am` can be fully used
+- ✅ `am.json` updated to the new schema format
+- ✅ `types.ts` in core matches the new schema and fully supports the lang-am packages
 
 ---
 

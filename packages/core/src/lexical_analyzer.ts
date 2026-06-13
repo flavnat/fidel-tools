@@ -8,10 +8,12 @@ import type { LanguagePack } from './types.js'
  * @returns : Lexically analyzed Amharic text
  */
 export function lexAnalyze(corpus: string, pack: LanguagePack): string {
-  // Remove abbreviations
-  for (const key in pack.abbreviations) {
-    let regex = new RegExp(`${key}`)
-    corpus = corpus.replace(regex, `${pack.abbreviations[key]}`)
+  // Expand exceptions (abbreviations)
+  if (pack.tokenization && pack.tokenization.exceptions) {
+    for (const key in pack.tokenization.exceptions) {
+      const expansion = pack.tokenization.exceptions[key].join(" ")
+      corpus = corpus.replaceAll(key, expansion)
+    }
   }
 
   corpus = corpus

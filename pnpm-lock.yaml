@@ -72,7 +72,7 @@ importers:
         specifier: ^7.18.6
         version: 7.29.7(@babel/core@7.29.7)
       '@types/node':
-        specifier: ^20.2.4
+        specifier: ^20.19.42
         version: 20.19.42
       jest:
         specifier: ^28.1.3

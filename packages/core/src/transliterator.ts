@@ -6,7 +6,7 @@ import type { LanguagePack } from './types.js'
  */
 export function sera_transliterate(word: string, lang: "am" | "en", pack: LanguagePack) {
   let trans_word = ""
-  const sera_transliteration_lookup_table = pack.transliteration.sera
+  const sera_transliteration_lookup_table = pack.transliteration.sera.map
 
   if (lang === "am") {
     let tokens: string[] = word.split("")
@@ -44,7 +44,7 @@ export function sera_transliterate(word: string, lang: "am" | "en", pack: Langua
 
 export function felig_transliterate(word: string, lang: "am" | "en", pack: LanguagePack) {
   let trans_word = ""
-  const felig_transliteration_lookup_table = pack.transliteration.felig
+  const felig_transliteration_lookup_table = pack.transliteration.felig.map
 
   if (lang === "am") {
     let tokens = word.split("")
@@ -82,12 +82,15 @@ export function felig_transliterate(word: string, lang: "am" | "en", pack: Langu
         let ltrs = letter.split("")
         let am_letter = ""
         ltrs.forEach((ltr) => {
-          am_letter += Object.keys(felig_transliteration_lookup_table).find(
+          const found = Object.keys(felig_transliteration_lookup_table).find(
             (key) => felig_transliteration_lookup_table[key] === ltr
           )
+          if (found !== undefined) {
+            am_letter += found
+          }
         })
 
-        if (am_letter !== undefined && am_letter !== "ኧ") {
+        if (am_letter !== "" && am_letter !== "ኧ") {
           trans_word += am_letter
         }
       }

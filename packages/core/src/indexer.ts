@@ -1,4 +1,3 @@
-import fs from "fs"
 import stem from "./stemmer.js"
 import lexAnalyze from "./lexical_analyzer.js"
 import rmvStopwrd from "./stopword_remover.js"
@@ -96,12 +95,13 @@ export function indexQuery(
 }
 
 // Backwards-compat Node.js wrapper — fs lives here only
-export function indexTerms(
+export async function indexTerms(
   corpus: string[],
   outputIndexFilePath: string,
   type: "doc" | "query",
   pack: LanguagePack
-): void {
+): Promise<void> {
+  const fs = await import("fs")
   if (type === "doc") {
     const docs = corpus.map(filePath => {
       try {

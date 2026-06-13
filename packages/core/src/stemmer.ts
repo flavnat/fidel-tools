@@ -3,6 +3,10 @@
 import { felig_transliterate } from "./transliterator.js"
 import type { LanguagePack } from "./types.js"
 
+function escapeRegExp(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
 /**
  * Takes an Amharic word and returns the stem through affix-removal with longest match.
  * @param word : word possibly containing one or more affix
@@ -13,29 +17,39 @@ import type { LanguagePack } from "./types.js"
  * stem("ልጆቻቸውን", amPack) // returns "ልጅ"
  */
 export function stem(word: string, pack: LanguagePack): string {
+  if (pack.stemmer.protected_words && pack.stemmer.protected_words.includes(word)) {
+    return word
+  }
+
   let cv_string = felig_transliterate(word, "am", pack) // consonant-vowel string
 
   const sfx_arr: string[] = []
   const pfx_arr: string[] = []
 
   // Prepare suffix array
-  const sarr = pack.stemmer.suffix_list.split("|")
+  const sarr = pack.stemmer.suffixes || []
   sarr.forEach((suffix) => {
     sfx_arr.push(felig_transliterate(suffix, "am", pack))
+    if (suffix.startsWith("ዎ")) {
+      const altSuffix = "ኦ" + suffix.substring(1)
+      sfx_arr.push(felig_transliterate(altSuffix, "am", pack))
+    }
   })
 
   sfx_arr.push("Wa") // Special case for ሯ
+  sfx_arr.sort((a, b) => b.length - a.length)
 
   // Prepare prefix array
-  const parr = pack.stemmer.prefix_list.split("|")
+  const parr = pack.stemmer.prefixes || []
   parr.forEach((prefix) => {
     pfx_arr.push(felig_transliterate(prefix, "am", pack))
   })
+  pfx_arr.sort((a, b) => b.length - a.length)
 
   // Remove suffixes
   sfx_arr.every(function (sfx, index) {
     if (cv_string.endsWith(sfx)) {
-      let regex = new RegExp(`${sfx}$`, `i`)
+      let regex = new RegExp(`${escapeRegExp(sfx)}$`, `i`)
       cv_string = cv_string.replace(regex, "")
       return false
     } else return true
@@ -44,7 +58,7 @@ export function stem(word: string, pack: LanguagePack): string {
   // Remove prefixes
   pfx_arr.every(function (pfx, index) {
     if (cv_string.startsWith(pfx)) {
-      let regex = new RegExp(`^${pfx}`)
+      let regex = new RegExp(`^${escapeRegExp(pfx)}`)
       cv_string = cv_string.replace(regex, "")
       return false
     } else return true
@@ -60,12 +74,11 @@ export function stem(word: string, pack: LanguagePack): string {
     cv_string = cv_string.replace(/a.+/i, "")
   }
 
-  if (/[bcdfghjklmnpqrstvwxyz]{2}e/i.test(cv_string)) {
-    let ccv = cv_string.match(/[bcdfghjklmnpqrstvwxyz]{2}e/i)!
-
+  const ccvMatch = cv_string.match(/[bcdfghjklmnpqrstvwxyz]{2}e/i)
+  if (ccvMatch) {
     cv_string = cv_string.replace(
       /[bcdfghjklmnpqrstvwxyz]{2}e/i,
-      ccv[0].substring(0, 1) + "X" + ccv[0].substring(1)
+      ccvMatch[0].substring(0, 1) + "X" + ccvMatch[0].substring(1)
     )
   }
 
