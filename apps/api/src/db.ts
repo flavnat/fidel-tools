@@ -39,7 +39,7 @@ export async function initDb() {
         `);
 
         // Insert a default API key for development/demo purposes
-        const defaultKey = "fidel_dev_key_2026";
+        const defaultKey = process.env.DEMO_API_KEY || "fidel_dev_key_2026";
         const checkKey = await client.query("SELECT key FROM api_keys WHERE key = $1", [defaultKey]);
         if (checkKey.rowCount === 0) {
             await client.query(

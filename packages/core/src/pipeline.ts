@@ -1,47 +1,68 @@
-import type { LanguagePack } from './types.js'
-import { stem } from './stemmer.js'
-import { removeStopwords } from './stopword_remover.js'
-import { lexAnalyze } from './lexical_analyzer.js'
-import { felig_transliterate, sera_transliterate } from './transliterator.js'
-import { indexDocuments, indexQuery } from './indexer.js'
-import { weighTerms } from './term_weighter.js'
-import type { DocIndexData, QueryIndexData } from './indexer.js'
-import { normalize } from './normalizer.js'
-import { sentenceTokenize } from './sentence_tokenizer.js'
+import type { LanguagePack } from "./types.js";
+import { stem } from "./stemmer.js";
+import { removeStopwords } from "./stopword_remover.js";
+import { lexAnalyze } from "./lexical_analyzer.js";
+import { felig_transliterate, sera_transliterate } from "./transliterator.js";
+import { indexDocuments, indexQuery } from "./indexer.js";
+import { weighTerms } from "./term_weighter.js";
+import type { DocIndexData, QueryIndexData } from "./indexer.js";
+import { normalize } from "./normalizer.js";
+import { sentenceTokenize } from "./sentence_tokenizer.js";
 
 export class Pipeline {
-  constructor(private pack: LanguagePack) {}
+    constructor(private pack: LanguagePack) {}
 
-  normalize(text: string): string {
-    return normalize(text, this.pack)
-  }
+    normalize(text: string): string {
+        if (!text) return "";
+        return normalize(text, this.pack);
+    }
 
-  sentenceTokenize(text: string): string[] {
-    return sentenceTokenize(text, this.pack)
-  }
+    sentenceTokenize(text: string): string[] {
+        if (!text) return [];
+        return sentenceTokenize(text, this.pack);
+    }
 
-  stem(word: string): string {
-    return stem(word, this.pack)
-  }
-  removeStopwords(corpus: string): string {
-    return removeStopwords(corpus, this.pack)
-  }
-  lexAnalyze(corpus: string): string {
-    return lexAnalyze(corpus, this.pack)
-  }
-  feligTransliterate(word: string, lang: "am" | "en"): string {
-    return felig_transliterate(word, lang, this.pack)
-  }
-  seraTransliterate(word: string, lang: "am" | "en"): string {
-    return sera_transliterate(word, lang, this.pack)
-  }
-  indexDocuments(docs: Array<{ id: string; content: string }>): DocIndexData {
-    return indexDocuments(docs, this.pack)
-  }
-  indexQuery(query: string): QueryIndexData {
-    return indexQuery(query, this.pack)
-  }
-  weighTerms(index: DocIndexData | QueryIndexData, type: "doc" | "query") {
-    return weighTerms(index, type)
-  }
+    stem(word: string): string {
+        if (!word) return "";
+        return stem(word, this.pack);
+    }
+
+    removeStopwords(corpus: string): string {
+        if (!corpus) return "";
+        return removeStopwords(corpus, this.pack);
+    }
+
+    lexAnalyze(corpus: string): string {
+        if (!corpus) return "";
+        return lexAnalyze(corpus, this.pack);
+    }
+
+    feligTransliterate(word: string, lang: "am" | "en"): string {
+        if (!word) return "";
+        return felig_transliterate(word, lang, this.pack);
+    }
+
+    // Depreciated : Not used across our toolset (just here so we can fix it later)
+    seraTransliterate(word: string, lang: "am" | "en"): string {
+        if (!word) return "";
+        return sera_transliterate(word, lang, this.pack);
+    }
+    indexDocuments(docs: Array<{ id: string; content: string }>): DocIndexData {
+        if (!docs || docs.length === 0) {
+            return { corpus_size: 0, corpus_word_count: {}, words: {} };
+        }
+        return indexDocuments(docs, this.pack);
+    }
+
+    indexQuery(query: string): QueryIndexData {
+        if (!query) {
+            return { corpus_size: 0, corpus_word_count: 0, words: {} };
+        }
+        return indexQuery(query, this.pack);
+    }
+
+    weighTerms(index: DocIndexData | QueryIndexData, type: "doc" | "query") {
+        if (!index) return null;
+        return weighTerms(index, type);
+    }
 }

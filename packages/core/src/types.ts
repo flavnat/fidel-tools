@@ -40,11 +40,13 @@ export interface NumbersConfig {
   ethiopic_to_arabic: Record<string, string>
 }
 
+// TODO: Implement Sentiment analysis in core engine. Currently defined for future LanguagePack schema completeness.
 export interface SentimentConfig {
   model: string
   lexicon: string
 }
 
+// TODO: Implement Named Entity Recognition (NER) in core engine. Currently defined for future LanguagePack schema completeness.
 export interface NERConfig {
   model: string
   name_lists: string[]

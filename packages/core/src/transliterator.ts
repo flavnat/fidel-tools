@@ -1,8 +1,25 @@
 // JavaScript implementations of Amharic to ASCII transliterator
 import type { LanguagePack } from './types.js'
 
+// Cache for reverse maps to ensure O(1) lookups instead of O(n) linear scans
+const reverseMapCache = new WeakMap<Record<string, string>, Record<string, string>>()
+
+function getReverseMap(map: Record<string, string>): Record<string, string> {
+  let reverseMap = reverseMapCache.get(map)
+  if (!reverseMap) {
+    reverseMap = {}
+    for (const [key, value] of Object.entries(map)) {
+      if (reverseMap[value] === undefined) {
+        reverseMap[value] = key
+      }
+    }
+    reverseMapCache.set(map, reverseMap)
+  }
+  return reverseMap
+}
+
 /**
- *@deprecated Use {@link felig_transliterate} function instead.
+ * @deprecated Internal fallback only. Use {@link felig_transliterate} instead.
  */
 export function sera_transliterate(word: string, lang: "am" | "en", pack: LanguagePack) {
   let trans_word = ""
@@ -18,10 +35,9 @@ export function sera_transliterate(word: string, lang: "am" | "en", pack: Langua
   } else if (lang === "en") {
     let tokens: string[] | null = word.match(/.{1,2}/g)
     if (tokens) {
+      const reverseTable = getReverseMap(sera_transliteration_lookup_table)
       tokens.forEach((letter) => {
-        let en_letter = Object.keys(sera_transliteration_lookup_table).find(
-          (key) => sera_transliteration_lookup_table[key] === letter
-        )
+        const en_letter = reverseTable[letter]
         if (en_letter !== undefined) {
           trans_word += en_letter
         }
@@ -38,10 +54,9 @@ export function sera_transliterate(word: string, lang: "am" | "en", pack: Langua
  * @param lang : language to transliterate form
  * @returns : a transliterated string
  *
- * @example{ transliterate Amharic word to English}
- * flig_transliterate("ወንበር","am") // returns "wenber"
+ * @example { transliterate Amharic word to English }
+ * felig_transliterate("ወንበር","am") // returns "wenber"
  */
-
 export function felig_transliterate(word: string, lang: "am" | "en", pack: LanguagePack) {
   let trans_word = ""
   const felig_transliteration_lookup_table = pack.transliteration.felig.map
@@ -60,19 +75,16 @@ export function felig_transliterate(word: string, lang: "am" | "en", pack: Langu
       return ""
     }
 
+    const reverseTable = getReverseMap(felig_transliteration_lookup_table)
+
     tokens.forEach((letter) => {
       if (/[^aeiou][aeiou]/i.test(letter)) {
         let am_letter: string = ""
 
         if (/[W][a]/g.test(letter)) {
-          am_letter = Object.keys(felig_transliteration_lookup_table).find(
-            (key) =>
-              felig_transliteration_lookup_table[key] === letter.toLowerCase()
-          )!
+          am_letter = reverseTable[letter.toLowerCase()]!
         } else {
-          am_letter = Object.keys(felig_transliteration_lookup_table).find(
-            (key) => felig_transliteration_lookup_table[key] === letter
-          )!
+          am_letter = reverseTable[letter]!
         }
 
         if (am_letter !== undefined) {
@@ -82,9 +94,7 @@ export function felig_transliterate(word: string, lang: "am" | "en", pack: Langu
         let ltrs = letter.split("")
         let am_letter = ""
         ltrs.forEach((ltr) => {
-          const found = Object.keys(felig_transliteration_lookup_table).find(
-            (key) => felig_transliteration_lookup_table[key] === ltr
-          )
+          const found = reverseTable[ltr]
           if (found !== undefined) {
             am_letter += found
           }

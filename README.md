@@ -74,6 +74,13 @@ console.log(stem) // "ልጅ"
 
 ---
 
+## Production Deployment Notes
+
+### Rate Limiter Limitation
+The built-in rate limiter (`apps/api/src/middleware/rateLimiter.ts`) stores request counters in an in-memory Javascript store. While perfectly sufficient for single-instance applications or local testing, this state is volatile and resets on server restarts. If you are deploying the API across multiple distributed instances, it is recommended to refactor the memory store in `rateLimiter.ts` to utilize a shared cache database like Redis.
+
+---
+
 ## Contribution
 
 Fidel Tools is free and open-source software licensed under the [MIT License](LICENSE). You can support the project by:

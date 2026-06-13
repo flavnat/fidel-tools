@@ -88,7 +88,8 @@ const standardLimiter = rateLimiter({
 
 export const apiRateLimiter: MiddlewareHandler = async (c, next) => {
     const apiKey = c.get("apiKey");
-    if (apiKey === "fidel_dev_key_2026") {
+    const demoKey = process.env.DEMO_API_KEY || "fidel_dev_key_2026";
+    if (apiKey === demoKey) {
         return demoLimiter(c, next);
     }
     return standardLimiter(c, next);

@@ -16,7 +16,6 @@ import type {
     PipelineLike,
     PreviewTabId,
     TransLang,
-    TransType,
 } from "./preview-console/types";
 
 const nlp = new Pipeline(amPack as any) as unknown as PipelineLike;
@@ -34,7 +33,6 @@ export default function PreviewPage({ onBackToHome, theme, toggleTheme }: Previe
     );
     const [activeTab, setActiveTab] = useState<PreviewTabId>("pipeline");
     const [transLang, setTransLang] = useState<TransLang>("am");
-    const [transType, setTransType] = useState<TransType>("felig");
     const [copied, setCopied] = useState(false);
     const [loading, setLoading] = useState(true);
 
@@ -86,7 +84,7 @@ import amPack from '@fidel-tools/lang-am';
 const nlp = new Pipeline(amPack);
 const word = "${transLang === "am" ? "ወንበር" : "wenber"}";
 
-const result = nlp.${transType === "felig" ? "feligTransliterate" : "seraTransliterate"}(word, "${transLang}");
+const result = nlp.feligTransliterate(word, "${transLang}");
 console.log(result);`,
         stemmer: `import { Pipeline } from '@fidel-tools/core';
 import amPack from '@fidel-tools/lang-am';
@@ -124,8 +122,6 @@ console.log(cleaned); // → "ትምህርት ቤት እና መስሪያ ቤት"
                         nlp={nlp}
                         transLang={transLang}
                         setTransLang={setTransLang}
-                        transType={transType}
-                        setTransType={setTransType}
                     />
                 );
             case "stemmer":

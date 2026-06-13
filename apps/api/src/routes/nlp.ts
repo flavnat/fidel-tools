@@ -8,7 +8,6 @@ import {
     stem,
     removeStopwords,
     felig_transliterate,
-    sera_transliterate,
 } from "@fidel-tools/core";
 
 const nlpRouter = new OpenAPIHono();
@@ -496,8 +495,7 @@ nlpRouter.openapi(transliterateRoute, async (c) => {
     try {
         const { text, direction = "am", type = "felig", lang = "am" } = c.req.valid("json");
         const pack = await getPack(lang);
-        const method = type === "sera" ? sera_transliterate : felig_transliterate;
-        const result = method(text, direction === "en" ? "en" : "am", pack);
+        const result = felig_transliterate(text, direction === "en" ? "en" : "am", pack);
 
         return c.json({
             input: text,

@@ -9,31 +9,34 @@ import type { LanguagePack } from './types.js'
  * @returns The normalized string.
  */
 export function normalize(text: string, pack: LanguagePack): string {
+  if (!text) {
+    return ""
+  }
+
   if (!pack.normalization) {
     return text
   }
 
   let normalized = text
 
-  // 1. Apply char_map
+  // 1 & 2. Apply char_map and labialized_map in a single pass over characters
   const charMap = pack.normalization.char_map || {}
-  let chars = normalized.split("")
-  for (let i = 0; i < chars.length; i++) {
-    if (charMap[chars[i]] !== undefined) {
-      chars[i] = charMap[chars[i]]
-    }
-  }
-  normalized = chars.join("")
-
-  // 2. Apply labialized_map
   const labializedMap = pack.normalization.labialized_map || {}
-  let chars2 = normalized.split("")
-  for (let i = 0; i < chars2.length; i++) {
-    if (labializedMap[chars2[i]] !== undefined) {
-      chars2[i] = labializedMap[chars2[i]]
+  
+  if (Object.keys(charMap).length > 0 || Object.keys(labializedMap).length > 0) {
+    const chars = normalized.split("")
+    for (let i = 0; i < chars.length; i++) {
+      let char = chars[i]
+      if (charMap[char] !== undefined) {
+        char = charMap[char]
+      }
+      if (labializedMap[char] !== undefined) {
+        char = labializedMap[char]
+      }
+      chars[i] = char
     }
+    normalized = chars.join("")
   }
-  normalized = chars2.join("")
 
   // 3. Collapse gemination
   const threshold = pack.normalization.gemination_threshold
