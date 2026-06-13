@@ -18,7 +18,7 @@ export function lexAnalyze(corpus: string, pack: LanguagePack): string {
 
   corpus = corpus
     .replace(/[.\?"',/#!$%^&*;:፤።{}=\-_`~()]/g, " ")
-    .replace(/[.፩፪፫፬፭፮፮፰፱፲፳፴፵፵፷፸፹፺፻0123456789]/g, " ")
+    .replace(/[.፩፪፫፬፭፮፯፰፱፲፳፴፵፶፷፸፹፺፻0123456789]/g, " ")
     .replace(/\s{2,}/g, " ")
 
   return corpus

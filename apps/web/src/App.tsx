@@ -3,7 +3,7 @@ import {
     Sun,
     Moon,
     Github,
-    Sparkles,
+    Play,
     X,
     Code2,
     Copy,
@@ -81,14 +81,14 @@ function App() {
             const next = prev + 1;
             if (next >= 7) {
                 setIsBursting(true);
-                toast.info("Unlocking Developer Console...", {
-                    description: "Redirecting you to the live environment.",
+                toast.success("Easter Egg Activated! 🥚", {
+                    description: "You are now officially a Certified Ethiopic NLP Scholar! 📜",
+                    duration: 5000,
                 });
                 setTimeout(() => {
-                    navigateTo("preview");
                     setIsBursting(false);
                     setLogoClicks(0);
-                }, 700);
+                }, 1000);
                 return 7;
             }
             return next;
@@ -355,7 +355,7 @@ function App() {
                                 </div>
 
                                 <div className="inline-flex items-center gap-1.5 bg-sky-500/10 border border-sky-500/20 text-sky-700 dark:text-sky-400 text-[10px] font-bold tracking-wider uppercase px-3 py-1 rounded-full mb-6">
-                                    <Sparkles size={11} className="text-sky-600 dark:text-sky-400 animate-pulse" />
+                                    <Code2 size={11} className="text-sky-600 dark:text-sky-400" />
                                     <span>4+ Active Developers Since Jan 2026</span>
                                 </div>
 
@@ -445,20 +445,30 @@ function App() {
                                         ✓ Thanks! We'll notify you as soon as we launch.
                                     </div>
                                 )}
+
+                                <div className="mt-4">
+                                    <button
+                                        onClick={() => navigateTo("preview")}
+                                        className="inline-flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs md:text-sm px-5 py-2.5 rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.15)] cursor-pointer active:scale-95 transition-all duration-200 w-full sm:w-auto"
+                                    >
+                                        <Play size={12} className="text-white fill-white" />
+                                        Try the Interactive Demo
+                                    </button>
+                                </div>
                             </div>
 
                             {/* Inner Features Tag List */}
                             <div className="flex flex-wrap gap-4 border-t border-slate-200/50 dark:border-zinc-800/50 pt-5 mt-5 w-full">
                                 <div className="flex items-center gap-1.5 text-[9px] md:text-[10px] font-bold tracking-wider text-slate-500 dark:text-zinc-500 uppercase">
-                                    <Sparkles size={11} className="text-sky-500 animate-pulse" />
+                                    <Check size={11} className="text-sky-500" />
                                     <span>Multilingual Support</span>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-[9px] md:text-[10px] font-bold tracking-wider text-slate-500 dark:text-zinc-500 uppercase">
-                                    <Sparkles size={11} className="text-sky-500 animate-pulse" />
+                                    <Check size={11} className="text-sky-500" />
                                     <span>Commercial Grade</span>
                                 </div>
                                 <div className="flex items-center gap-1.5 text-[9px] md:text-[10px] font-bold tracking-wider text-slate-500 dark:text-zinc-500 uppercase">
-                                    <Sparkles size={11} className="text-sky-500 animate-pulse" />
+                                    <Check size={11} className="text-sky-500" />
                                     <span>Dedicated SLA</span>
                                 </div>
                             </div>

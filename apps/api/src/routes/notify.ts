@@ -1,35 +1,49 @@
-import { Hono } from 'hono'
-import { promises as fs } from 'fs'
-import { join } from 'path'
+import { Hono } from "hono";
+import { pool } from "../db.js";
+import { rateLimiter } from "../middleware/rateLimiter.js";
 
-const notifyRouter = new Hono()
+const notifyRouter = new Hono();
 
-notifyRouter.post('/', async (c) => {
-  try {
-    const { email } = await c.req.json()
-    if (!email || typeof email !== 'string' || !email.includes('@')) {
-      return c.json({ error: 'Invalid email address' }, 400)
-    }
+// Apply public rate limiter to subscription requests: maximum 10 submissions per minute per IP address
+notifyRouter.use(
+    "/",
+    rateLimiter({
+        windowMs: 60 * 1000,
+        max: 10,
+        keyGenerator: (c) => {
+            // Retrieve client IP address
+            const forwarded = c.req.header("x-forwarded-for");
+            if (forwarded) {
+                return forwarded.split(",")[0].trim();
+            }
+            return "ip-unknown";
+        },
+    }),
+);
 
-    const filePath = join(process.cwd(), 'subscribers.json')
-    let subscribers: string[] = []
-
+notifyRouter.post("/", async (c) => {
     try {
-      const data = await fs.readFile(filePath, 'utf8')
-      subscribers = JSON.parse(data)
-    } catch (err: any) {
-      // File doesn't exist or is empty, start with an empty array
+        const { email } = await c.req.json();
+        if (!email || typeof email !== "string" || !email.includes("@")) {
+            return c.json({ error: "Invalid email address" }, 400);
+        }
+
+        const emailLower = email.trim().toLowerCase();
+
+        // Insert email into PostgreSQL database, avoiding duplicates via ON CONFLICT
+        await pool.query(
+            "INSERT INTO subscribers (email) VALUES ($1) ON CONFLICT (email) DO NOTHING",
+            [emailLower],
+        );
+
+        return c.json({ success: true, message: "Subscribed successfully" });
+    } catch (error: any) {
+        console.error("Subscription endpoint error:", error);
+        return c.json(
+            { error: "Internal server error", details: error.message },
+            500,
+        );
     }
+});
 
-    if (!subscribers.includes(email)) {
-      subscribers.push(email)
-      await fs.writeFile(filePath, JSON.stringify(subscribers, null, 2), 'utf8')
-    }
-
-    return c.json({ success: true, message: 'Subscribed successfully' })
-  } catch (error: any) {
-    return c.json({ error: 'Internal server error', details: error.message }, 500)
-  }
-})
-
-export default notifyRouter
+export default notifyRouter;

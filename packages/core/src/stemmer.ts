@@ -17,8 +17,20 @@ function escapeRegExp(str: string): string {
  * stem("ልጆቻቸውን", amPack) // returns "ልጅ"
  */
 export function stem(word: string, pack: LanguagePack): string {
-  if (pack.stemmer.protected_words && pack.stemmer.protected_words.includes(word)) {
-    return word
+  if (pack.stemmer.protected_words) {
+    if (pack.stemmer.protected_words.includes(word)) {
+      return word
+    }
+    // Check if stripping any prefix yields a protected word
+    const prefixes = pack.stemmer.prefixes || []
+    for (const prefix of prefixes) {
+      if (word.startsWith(prefix)) {
+        const stripped = word.substring(prefix.length)
+        if (pack.stemmer.protected_words.includes(stripped)) {
+          return stripped
+        }
+      }
+    }
   }
 
   let cv_string = felig_transliterate(word, "am", pack) // consonant-vowel string

@@ -1,4 +1,4 @@
-name: Publish Core to NPM
+name: Publish Packages to NPM
 
 on:
   release:
@@ -26,10 +26,13 @@ jobs:
     - name: Install dependencies
       run: pnpm install
 
-    - name: Build package
-      run: pnpm --filter @fidel-tools/core build
+    - name: Build packages
+      run: pnpm build
 
     - name: Publish to NPM
-      run: pnpm --filter @fidel-tools/core publish --no-git-checks
+      run: |
+        pnpm --filter @fidel-tools/core publish --no-git-checks
+        pnpm --filter @fidel-tools/lang-am publish --no-git-checks
+        pnpm --filter @fidel-tools/validate-pack publish --no-git-checks
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
