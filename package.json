@@ -7,7 +7,7 @@
     },
     "packageManager": "pnpm@10.28.0",
     "scripts": {
-        "build": "pnpm --filter ./packages/core build && pnpm --filter ./packages/lang-am build && pnpm --filter ./apps/web build",
+        "build": "pnpm --filter ./packages/core build && pnpm --filter ./packages/lang-am build && pnpm --filter ./apps/api build && pnpm --filter ./apps/web build",
         "test": "pnpm --filter \"@fidel-tools/*\" test"
     },
     "devDependencies": {

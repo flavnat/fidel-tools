@@ -123,33 +123,25 @@ function App() {
         return () => clearInterval(timer);
     }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (email.trim()) {
-            try {
-                const apiUrl = (import.meta as any).env?.VITE_API_URL || "http://localhost:3000";
-                const response = await fetch(`${apiUrl}/notify`, {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({ email: email.trim() }),
-                });
-                if (response.ok) {
-                    setSubmitted(true);
-                    setEmail("");
-                } else {
-                    console.error("Subscription failed:", await response.text());
-                    // Fallback to local success to keep UX unbroken
-                    setSubmitted(true);
-                    setEmail("");
-                }
-            } catch (err) {
-                console.error("Subscription request error:", err);
-                // Fallback to local success to keep UX unbroken
-                setSubmitted(true);
-                setEmail("");
-            }
+            const emailToSubmit = email.trim();
+            // Optimistically transition UI immediately to handle cold starts gracefully
+            setSubmitted(true);
+            setEmail("");
+
+            // Fire request in background without holding up the user interface
+            const apiUrl = (import.meta as any).env?.VITE_API_URL || "http://localhost:3000";
+            fetch(`${apiUrl}/notify`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ email: emailToSubmit }),
+            }).catch((err) => {
+                console.error("Background subscription request failed:", err);
+            });
         }
     };
 
