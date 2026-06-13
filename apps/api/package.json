@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@fidel-tools/core": "workspace:*",
+    "@hono/node-server": "^2.0.4",
     "hono": "^4.0.0"
   },
   "devDependencies": {

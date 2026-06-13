@@ -1,4 +1,51 @@
+# Dependency directories
 node_modules/
-corpus/
-coverage/
+**/node_modules/
+
+# Production build outputs
 dist/
+**/dist/
+build/
+**/build/
+out/
+**/out/
+
+# Test coverage reports
+coverage/
+**/coverage/
+
+# Local configuration and environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+**/.env
+**/.env.local
+**/.env.development.local
+**/.env.test.local
+**/.env.production.local
+
+# Subscribers data file (prevent committing collected user data)
+apps/api/subscribers.json
+
+# IDE / Editor configurations
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS metadata files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
