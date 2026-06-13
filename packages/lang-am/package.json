@@ -1,10 +1,30 @@
 {
   "name": "@fidel-tools/lang-am",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Amharic language pack for Fidel Tools",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "am.json"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "Amharic",
+    "NLP",
+    "Ethiopia",
+    "Ge'ez",
+    "Language Pack"
+  ],
+  "author": "Yehonatal",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yehonatal/fidel-tools.git"
+  },
   "scripts": {
     "build": "tsc"
   },

@@ -1,10 +1,16 @@
 {
     "name": "@fidel-tools/core",
-    "version": "2.0.1",
+    "version": "0.1.0",
     "description": "Amharic Language Pre-processor toolkit",
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "type": "module",
+    "files": [
+        "dist"
+    ],
+    "publishConfig": {
+        "access": "public"
+    },
     "scripts": {
         "start": "node dist/index.js",
         "build": "tsc",

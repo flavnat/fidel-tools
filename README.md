@@ -1,150 +1,151 @@
 <p align="center">
-  <img height="170" src="./Fidel.png" alt="Fidel logo" />
+  <img height="150" src="./Fidel.png" alt="Fidel Tools logo" />
 </p>
+
 <h1 align="center">Fidel Tools</h1>
+
 <p align="center">
-  <strong>A modern toolkit for Amharic language pre-processing</strong>
+  <strong>The Developer-Friendly, Schema-Driven NLP Pipeline for Amharic Text Pre-processing.</strong>
 </p>
+
 <p align="center">
-  <a href="https://fidel-tools.vercel.app/">Fidel Tools Web Demo</a>
+  <a href="https://github.com/Yehonatal/fidel-tools/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License" /></a>
+  <a href="https://www.npmjs.com/package/@fidel-tools/core"><img src="https://img.shields.io/npm/v/@fidel-tools/core.svg" alt="NPM Version" /></a>
+  <a href="https://fidel-tools.vercel.app/"><img src="https://img.shields.io/badge/demo-live-brightgreen.svg" alt="Live Demo" /></a>
+  <a href="https://pnpm.io/"><img src="https://img.shields.io/badge/maintained%20with-pnpm-ff69b4.svg" alt="pnpm" /></a>
 </p>
 
 ---
 
-## Overview
+## The Amharic NLP Challenge
 
-Fidel Tools is a pnpm workspace monorepo for Amharic NLP and text pre-processing. The current setup centers on two core pieces:
+Amharic (Fidel script) is spoken by over **50 million people** globally, yet it remains critically underserved in the modern Natural Language Processing (NLP) ecosystem. Building search engines, search indexers, sentiment analyzers, or LLM-preprocessors for Amharic is historically challenging due to:
+* **Rich morphology**: Highly complex prefixing and suffixing.
+* **Orthographic variations**: Homophones and labialized characters (e.g. `ቷ` to `ቱዋ`).
+* **Lack of developer tooling**: Few high-performance, lightweight pre-processing runtimes in TypeScript or JavaScript.
 
-- `@fidel-tools/core`, which exposes the processing pipeline and individual algorithms.
-- `@fidel-tools/lang-am`, which packages the Amharic language data used by the pipeline.
+**Fidel Tools** is the first enterprise-grade, schema-driven monorepo toolkit designed to normalize, tokenize, clean, stem, and transliterate Amharic text with academic precision and runtime efficiency.
 
-The toolkit covers lexical analysis, stopword removal, stemming, transliteration, document indexing, and term weighting.
+---
 
-## Core API
+## Features
 
-The main entry point is the `Pipeline` class from `@fidel-tools/core`. It accepts a `LanguagePack` and wraps the lower-level functions in a single interface:
-
-- `stem(word)`
-- `removeStopwords(corpus)`
-- `lexAnalyze(corpus)`
-- `feligTransliterate(word, lang)`
-- `seraTransliterate(word, lang)`
-- `indexDocuments(docs)`
-- `indexQuery(query)`
-- `weighTerms(index, type)`
-
-The shared language pack types are defined in `packages/core/src/types.ts`:
-
-- `LanguagePackMeta`
-- `StemmerConfig`
-- `TransliterationConfig`
-- `LanguagePack`
-
-## Amharic Language Pack
-
-The `@fidel-tools/lang-am` package ships the Amharic pack as JSON and exports it for direct use with the pipeline.
-
-It includes:
-
-- Metadata for the language code, name, and script.
-- Stopwords for filtering common function words.
-- Abbreviations for lexical expansion.
-- Stemmer prefix and suffix lists.
-- Transliteration mappings for both SERA and Felig output.
-
-Example usage:
-
-```ts
-import { Pipeline } from '@fidel-tools/core'
-import amPack from '@fidel-tools/lang-am'
-
-const nlp = new Pipeline(amPack)
-
-const text = 'ት/ቤት እና መስሪያ ቤት'
-const lexed = nlp.lexAnalyze(text)
-const cleaned = nlp.removeStopwords(lexed)
-const stem = nlp.stem('ልጆቻቸውን')
-
-console.log({ lexed, cleaned, stem })
-```
-
-## Demo App
-
-The web app includes an interactive preview console that exercises the pipeline against the Amharic pack. A lightweight mock file-system module is used in the preview layer so the UI can run without depending on browser file APIs during development and testing.
+*  **Schema-Driven Architecture**: The entire pipeline configuration (stopwords, transliteration rules, stemmer affixes, token exceptions) is driven by a standardized JSON schema. No hardcoded logic.
+*  **Advanced Normalization**: Resolves homophone characters, expands complex labialized sequences, and collapses character-repetition gemination (e.g. social media repetitions).
+*  **Sentence & Word Tokenization**: Clean sentence boundary splitting combined with abbreviation expansion leveraging a built-in database of 570+ standard contractions.
+*  **Morphology-Aware Stopword Filtering**: Filters out 430+ academic stopwords using prefix-aware boundary rules (e.g. removing `ተጨማሪ` from `የተጨማሪ` while keeping the preposition `የ`) without corrupting root strings.
+*  **Lightweight Stemmer**: Longest-match affix-removal algorithms that extract root forms based on sorted prefix and suffix tables.
+*  **Ethiopic Transliteration**: Full support for bidirectional SERA (System for Ethiopic Representation in ASCII) and Felig mappings.
+*  **Search Utilities**: Built-in document indexing and TF-IDF term-weighting wrappers.
+*  **Developer Guardrails**: A formal validator CLI (`@fidel-tools/validate-pack`) that enforces schema compliance, cycle detection, and includes a `--fix` flag to automatically repair duplicates or configuration overlaps.
 
 ---
 
 ## Monorepo Architecture
 
-```
+Fidel Tools is structured as a pnpm workspace monorepo:
+
+```text
 fidel-tools/
-├── package.json
-├── pnpm-workspace.yaml
 ├── packages/
-│   ├── core/
-│   │   ├── src/
-│   │   └── tests/
-│   └── lang-am/
-│       ├── am.json
-│       └── index.ts
+│   ├── core/            # High-performance processing runtime (TS)
+│   ├── lang-am/         # Curated Amharic language pack and schema config
+│   └── validate-pack/   # CLI validator for verifying and fixing language packs
 ├── apps/
-│   ├── api/
-│   └── web/
-└── docs/
+│   └── web/             # Interactive React/Next.js playground & visual console
+└── docs/                # Architectural diagrams and developer checklist
 ```
-
-### Workspace Relationships
-
-```
-packages/core  <──────────────  packages/lang-am
-     ▲                               ▲
-     │                               │
-     ├────────────── apps/api        └────────── apps/web
-```
-
-- `apps/api` depends on `@fidel-tools/core` through the local workspace.
-- `apps/web` depends on both `@fidel-tools/core` and `@fidel-tools/lang-am` for the preview console.
-- pnpm links workspace packages automatically, so local changes are reflected immediately across the repo.
 
 ---
 
-## Development
+## Quick Start
 
-### Prerequisites
+### Installation
 
-- [Node.js](https://nodejs.org) v20+ recommended
-- [pnpm](https://pnpm.io) v9+ recommended
-
-### Setup
-
-Install dependencies from the monorepo root:
+Install the core runtime and Amharic language pack:
 
 ```bash
-pnpm install
+pnpm add @fidel-tools/core @fidel-tools/lang-am
 ```
 
-### Workspace Commands
+### Basic Usage
 
-- Build everything: `pnpm build`
-- Run tests: `pnpm test`
-- Build the core package only: `pnpm --filter @fidel-tools/core build`
-- Run core tests only: `pnpm --filter @fidel-tools/core test`
-- Start the API: `pnpm --filter @fidel-tools/api dev`
-- Start the web demo: `pnpm --filter @fidel-tools/web dev`
+Instantiate the pipeline with the Amharic pack:
 
-### Quick Start
-
-```ts
+```typescript
 import { Pipeline } from '@fidel-tools/core'
 import amPack from '@fidel-tools/lang-am'
 
+// Initialize the schema-driven pipeline
 const nlp = new Pipeline(amPack)
-console.log(nlp.removeStopwords('እና በመሆኑም ት/ቤት'))
+
+// 1. Normalization (Homophones, labialization, gemination)
+const rawText = "ሐኪም ኀይሉ በልቷልልል!"
+const normalized = nlp.normalize(rawText)
+console.log(normalized) // "ሃኪም ሃይሉ በልቱዋልል!"
+
+// 2. Tokenization & Abbreviation Expansion
+const sentences = nlp.sentenceTokenize("ይህ የመጀመሪያው ዓረፍተ ነገር ነው። ሁለተኛው ደግሞ ት/ቤት ይከተላል፡")
+console.log(sentences)
+// [
+//   "ይህ የመጀመሪያው ዓረፍተ ነገር ነው",
+//   "ሁለተኛው ደግሞ ትምህርት ቤት ይከተላል"
+// ]
+
+// 3. Stopword Filtering (Using prefix-aware rules)
+const textWithStopwords = "ያወጣውን የተጨማሪ እሴት"
+const cleaned = nlp.removeStopwords(textWithStopwords)
+console.log(cleaned) // "ያወጣውን የ እሴት" (leaves preposition 'የ' intact, removes 'ተጨማሪ')
+
+// 4. Stemming
+const stem = nlp.stem("ልጆቻቸውን")
+console.log(stem) // "ልጅ"
 ```
 
 ---
 
-## Attribution
+## Tooling & Validation
+
+To guarantee runtime stability, the `@fidel-tools/validate-pack` package parses language packs and validates schema constraints, duplicate entries, and loops.
+
+### Validate a Pack
+```bash
+pnpm --filter @fidel-tools/validate-pack validate
+```
+
+### Auto-Fix Warnings and Duplicates
+If you modify `am.json` and introduce warnings (e.g. duplicate affixes or stopwords), run the validator with the `--fix` flag to resolve them automatically:
+```bash
+pnpm --filter @fidel-tools/validate-pack validate -- --fix
+```
+
+---
+
+## Development & Testing
+
+### Prerequisites
+* **Node.js**: v20 or later
+* **pnpm**: v9 or later
+
+### Local Setup
+```bash
+# Clone the repository
+git clone https://github.com/Yehonatal/fidel-tools.git
+cd fidel-tools
+
+# Install workspace dependencies
+pnpm install
+
+# Build all workspace packages
+pnpm build
+
+# Run all test suites
+pnpm test
+```
+
+---
+
+## Academic & Research Foundations
 
 The processing logic in this project draws on research and references in Amharic NLP and Ethiopic transliteration:
 
@@ -155,6 +156,12 @@ The processing logic in this project draws on research and references in Amharic
 
 ---
 
+## Contributing
+
+We welcome contributions to expand coverage for other Ethiopic script languages (e.g. Tigrinya, Ge'ez). Please read our [Contributing Guide](CONTRIBUTING.md) and [Changelog](CHANGELOG.md) to get started.
+
+---
+
 ## License
 
-This project is licensed under the [MIT License](LICENSE).
+Licensed under the [MIT License](LICENSE). Developed and maintained by the Fidel Tools Team.

@@ -1,6 +1,6 @@
 {
   "name": "@fidel-tools/api",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "start": "tsx src/index.ts",

@@ -1,12 +1,32 @@
 {
   "name": "@fidel-tools/validate-pack",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Validation tool for Fidel Tools language packs",
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
     "validate-pack": "./dist/bin.js"
+  },
+  "files": [
+    "dist"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "Amharic",
+    "NLP",
+    "Ethiopia",
+    "Language Pack",
+    "Validator",
+    "Linter"
+  ],
+  "author": "Yehonatal",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yehonatal/fidel-tools.git"
   },
   "scripts": {
     "build": "tsc",
