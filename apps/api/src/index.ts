@@ -54,7 +54,7 @@ app.doc("/openapi.json", {
     openapi: "3.0.0",
     info: {
         title: "ፊደል Tools API",
-        version: "1.0.0",
+        version: "0.1.0",
         description:
             "ፊደል (Fidel) Tools is a developer-first suite of high-performance natural language processing APIs built specifically for Ethiopic languages. This reference provides interactive documentation for our production-grade NLP preprocessing endpoints (normalization, tokenization, stopword removal, morphological stemming, transliteration).",
     },
@@ -70,76 +70,6 @@ const customCss = `
     --scalar-color-accent: #2563eb !important; /* Vibrant Blue Accent */
   }
 
-  /* Force Transparent backgrounds to let the site's premium background circles and dots shine through */
-  body, 
-  html, 
-  .scalar-app, 
-  #scalar-header, 
-  .sidebar, 
-  .sidebar-header, 
-  .sidebar-search, 
-  .main, 
-  .section, 
-  .content, 
-  .api-client,
-  .api-reference {
-    background: transparent !important;
-    background-color: transparent !important;
-  }
-
-  /* Style headers and text elements to fit the brand color scheme */
-  .dark-mode {
-    --scalar-color-1: #f4f4f5 !important;
-    --scalar-color-2: #a1a1aa !important;
-    --scalar-color-3: #71717a !important;
-    --scalar-border-color: rgba(255, 255, 255, 0.08) !important;
-    --scalar-background-1: transparent !important;
-    --scalar-background-2: rgba(255, 255, 255, 0.02) !important;
-    --scalar-background-3: rgba(255, 255, 255, 0.04) !important;
-  }
-
-  :root:not(.dark-mode) {
-    --scalar-color-1: #0f172a !important;
-    --scalar-color-2: #475569 !important;
-    --scalar-color-3: #64748b !important;
-    --scalar-border-color: rgba(0, 0, 0, 0.08) !important;
-    --scalar-background-1: transparent !important;
-    --scalar-background-2: rgba(0, 0, 0, 0.02) !important;
-    --scalar-background-3: rgba(0, 0, 0, 0.04) !important;
-  }
-
-  /* Glassmorphism card overlays for structural panels (Code blocks, parameter lists, etc.) */
-  .references-classic .section,
-  .api-client-panel,
-  .code-block,
-  .card,
-  .sidebar-group,
-  .parameter-item {
-    background: rgba(255, 255, 255, 0.03) !important;
-    backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    border-radius: 12px;
-  }
-
-  /* Make sure sidebar links look clean */
-  .sidebar-link {
-    border-radius: 8px;
-    margin: 2px 0;
-  }
-
-  /* Hide the Client Libraries / Code Generation section completely */
-  .scalar-client-libraries,
-  .client-libraries,
-  .scalar-api-client-section,
-  .api-client-select,
-  .download-client,
-  .download-button,
-  .api-client-section,
-  .scalar-reference-intro-clients,
-  
-  [data-testid="client-libraries"] {
-    display: none !important;
-  }
 `;
 
 // Scalar Documentation
@@ -147,7 +77,6 @@ app.get("/docs", (c, next) => {
     const themeParam = c.req.query("theme") || "dark";
     const forceDarkModeState = themeParam === "light" ? "light" : "dark";
     return apiReference({
-        theme: "saturn",
         spec: { url: "/openapi.json" },
         pageTitle: "ፊደል Tools API Reference",
         customCss,
