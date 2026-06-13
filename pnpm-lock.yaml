@@ -63,11 +63,10 @@ importers:
         version: 5.4.21(@types/node@20.19.42)
 
   packages/core:
-    dependencies:
+    devDependencies:
       '@babel/core':
         specifier: ^7.19.0
         version: 7.29.7
-    devDependencies:
       '@babel/plugin-transform-modules-commonjs':
         specifier: ^7.18.6
         version: 7.29.7(@babel/core@7.29.7)
@@ -86,6 +85,15 @@ importers:
       '@fidel-tools/core':
         specifier: workspace:*
         version: link:../core
+    devDependencies:
+      '@types/node':
+        specifier: ^20.2.4
+        version: 20.19.42
+      typescript:
+        specifier: ^5.0.4
+        version: 5.9.3
+
+  packages/validate-pack:
     devDependencies:
       '@types/node':
         specifier: ^20.2.4

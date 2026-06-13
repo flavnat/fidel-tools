@@ -5,6 +5,8 @@ export type { LanguagePack, LanguagePackMeta, StemmerConfig, TransliterationConf
 export { Pipeline } from './pipeline.js'
 
 // Individual functions (secondary API, for tree-shaking)
+export { normalize } from './normalizer.js'
+export { sentenceTokenize } from './sentence_tokenizer.js'
 export { stem } from './stemmer.js'
 export { removeStopwords } from './stopword_remover.js'
 export { lexAnalyze } from './lexical_analyzer.js'

@@ -6,9 +6,19 @@ import { felig_transliterate, sera_transliterate } from './transliterator.js'
 import { indexDocuments, indexQuery } from './indexer.js'
 import { weighTerms } from './term_weighter.js'
 import type { DocIndexData, QueryIndexData } from './indexer.js'
+import { normalize } from './normalizer.js'
+import { sentenceTokenize } from './sentence_tokenizer.js'
 
 export class Pipeline {
   constructor(private pack: LanguagePack) {}
+
+  normalize(text: string): string {
+    return normalize(text, this.pack)
+  }
+
+  sentenceTokenize(text: string): string[] {
+    return sentenceTokenize(text, this.pack)
+  }
 
   stem(word: string): string {
     return stem(word, this.pack)

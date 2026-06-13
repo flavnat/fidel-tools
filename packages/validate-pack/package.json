@@ -1,0 +1,20 @@
+{
+  "name": "@fidel-tools/validate-pack",
+  "version": "1.0.0",
+  "description": "Validation tool for Fidel Tools language packs",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "validate-pack": "./dist/bin.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "validate": "node dist/bin.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.2.4",
+    "typescript": "^5.0.4"
+  }
+}

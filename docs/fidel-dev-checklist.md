@@ -62,7 +62,7 @@
 - ✅ `transliterator.test.js` — present
 - [ ] `indexer` tests — no test file exists
 - [ ] `term_weighter` tests — no test file exists
-- [ ] `pipeline.ts` integration test — no end-to-end test
+- ✅ `pipeline.ts` integration test — end-to-end tests implemented (pipeline.test.js)
 
 ---
 
@@ -154,34 +154,33 @@
   - `transliteration.felig.scheme` + `transliteration.felig.map` (nested)
   - `numbers.ethiopic_to_arabic`
   - Optional: `sentiment`, `ner`
-- [ ] Update `stemmer.ts` to use `pack.stemmer.prefixes` and `pack.stemmer.suffixes` arrays directly (no more split on `|`)
-- [ ] Update `transliterator.ts` to read from `pack.transliteration.felig.map` and `pack.transliteration.sera.map`
-- [ ] Commit the new `am.json` (with normalization, tokenization, numbers, sentiment, ner blocks)
+- ✅ Update `stemmer.ts` to use `pack.stemmer.prefixes` and `pack.stemmer.suffixes` arrays directly (no more split on `|`)
+- ✅ Update `transliterator.ts` to read from `pack.transliteration.felig.map` and `pack.transliteration.sera.map`
 
 ### New Pipeline Components (from new schema)
-- [ ] `normalizer.ts` — apply `pack.normalization.char_map` and `pack.normalization.labialized_map` before tokenization
-- [ ] `sentence_tokenizer.ts` — split on `pack.tokenization.sentence_boundaries`; expose `sentenceTokenize(text, pack): string[]`
-- [ ] Wire `Normalizer` into `Pipeline` class as first step
-- [ ] Wire `SentenceTokenizer` into `Pipeline` class
-- [ ] Add `Pipeline.normalize(text)` and `Pipeline.sentenceTokenize(text)` methods
+- ✅ `normalizer.ts` — apply `pack.normalization.char_map` and `pack.normalization.labialized_map` before tokenization
+- ✅ `sentence_tokenizer.ts` — split on `pack.tokenization.sentence_boundaries`; expose `sentenceTokenize(text, pack): string[]`
+- ✅ Wire `Normalizer` into `Pipeline` class as first step
+- ✅ Wire `SentenceTokenizer` into `Pipeline` class
+- ✅ Add `Pipeline.normalize(text)` and `Pipeline.sentenceTokenize(text)` methods
 
 ### Language Pack Quality
-- [ ] Expand stopword list from 111 to 400+ entries (cross-reference academic Amharic NLP corpora)
-- [ ] Fix duplicate stopwords in current list (`እና`, `ወይም`, `ብቻ`, `ሌላ`, `ስለዚህ`, `ተጨማሪ`, `በጣም`, `ወይም` appear twice)
-- [ ] Expand abbreviation list — current 39 entries is thin; target 100+
-- [ ] Add `protected_words` to stemmer (at minimum: `ኢትዮጵያ`, `አፍሪካ`, `አዲስ አበባ`)
-- [ ] Complete labialized sequence coverage in `normalization.labialized_map`
-- [ ] Add gemination normalization logic using `gemination_threshold`
+- ✅ Expand stopword list from 111 to 400+ entries (cross-reference academic Amharic NLP corpora)
+- ✅ Fix duplicate stopwords in current list (`እና`, `ወይም`, `ብቻ`, `ሌላ`, `ስለዚህ`, `ተጨማሪ`, `በጣም`, `ወይም` appear twice)
+- ✅ Expand abbreviation list — current 39 entries is thin; target 100+
+- ✅ Add `protected_words` to stemmer (at minimum: `ኢትዮጵያ`, `አፍሪካ`, `አዲስ አበባ`)
+- ✅ Complete labialized sequence coverage in `normalization.labialized_map`
+- ✅ Add gemination normalization logic using `gemination_threshold`
 
 ### Pack Validation Tool
-- [ ] `packages/validate-pack/` — new package
-- [ ] JSON schema for `LanguagePack`
-- [ ] CLI: `npx @fidel-tools/validate-pack ./am.json`
-- [ ] Checks: required fields, no duplicate stopwords, no empty abbreviation values, no empty-key transliteration entries, char_map has no cycles
-- [ ] Smoke test: instantiate `Pipeline` with the pack, run sample text through all components
+- ✅ `packages/validate-pack/` — new package
+- ✅ JSON schema for `LanguagePack` (implemented as robust schema/type validations)
+- ✅ CLI: `npx @fidel-tools/validate-pack ./am.json` (also supports `--fix` flag to resolve warnings)
+- ✅ Checks: required fields, no duplicate stopwords, no empty abbreviation values, no empty-key transliteration entries, char_map has no cycles
+- ✅ Smoke test: instantiate `Pipeline` with the pack, run sample text through all components
 
 ### API Authentication
-- [ ] API key generation and storage (Supabase recommended)
+- [ ] API key generation and storage (Better auth)
 - [ ] Auth middleware for Hono — validate `X-API-Key` header
 - [ ] Rate limiting per key per tier
 - [ ] `POST /keys` endpoint (or admin-only key management)
