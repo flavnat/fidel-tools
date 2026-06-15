@@ -12,6 +12,10 @@ import { sentenceTokenize } from "./sentence_tokenizer.js";
 export class Pipeline {
     constructor(private pack: LanguagePack) {}
 
+    get stopwords(): string[] {
+        return this.pack.stopwords || [];
+    }
+
     normalize(text: string): string {
         if (!text) return "";
         return normalize(text, this.pack);

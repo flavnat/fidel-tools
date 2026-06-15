@@ -1,0 +1,244 @@
+@import "tailwindcss";
+
+/* Override the default dark variant to use a class selector */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+    font-family: "Loga";
+    src: url("/Loga_Light_4c025211ef.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+}
+
+@theme {
+  /* ── Technical Developer Color Palette ────────────────── */
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-primary-light: #60a5fa;
+
+  --color-surface: #fafafa;
+  --color-surface-elevated: #ffffff;
+  --color-surface-hover: #f4f4f5;
+  --color-surface-border: #e4e4e7;
+  --color-surface-border-subtle: #fafafa;
+
+  --color-text-primary: #09090b;
+  --color-text-secondary: #4b5563;
+  --color-text-muted: #71717a;
+  --color-text-inverse: #ffffff;
+
+  --color-success: #10b981;
+  --color-success-bg: #f0fdf4;
+  --color-warning: #f59e0b;
+  --color-warning-bg: #fffbeb;
+  --color-danger: #ef4444;
+  --color-danger-bg: #fef2f2;
+  --color-danger-hover: #dc2626;
+
+  /* ── Dark Mode (Zinc Industrial Palette) ──────────────── */
+  --color-dark-surface: #030303;
+  --color-dark-surface-elevated: #09090b;
+  --color-dark-surface-hover: #18181b;
+  --color-dark-surface-border: #1f1f23;
+  --color-dark-surface-border-subtle: #141416;
+
+  --color-dark-text-primary: #ffffff;
+  --color-dark-text-secondary: #a1a1aa;
+  --color-dark-text-muted: #52525b;
+
+  /* ── Typography ────────────────────────────────────────── */
+  --font-loga: "Loga", "Outfit", sans-serif;
+  --font-jakarta: "Plus Jakarta Sans", sans-serif;
+  --font-sans: var(--font-jakarta);
+  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+
+  /* ── Technical Radii (Tight & Precise) ────────────────── */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 6px;
+  --radius-xl: 8px;
+  --radius-2xl: 12px;
+
+  /* Disable shadows globally to achieve Ethiopic Editorial Minimalism */
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-2xl: none;
+}
+
+/* ── Base Resets ──────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: #fafafa;
+  color: #09090b;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  position: relative;
+}
+
+body.dark,
+.dark body {
+  background-color: #030303;
+  color: #fafafa;
+}
+
+/* Faint noise overlay for high-end developer texturing */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  opacity: 0.018;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.dark body::before {
+  opacity: 0.038;
+}
+
+/* ── Focus Ring ──────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* ── Custom Scrollbar ────────────────────────────────────── */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.3);
+}
+
+/* ── Technical Grid Overlay Utility ──────────────────────── */
+@utility bg-grid {
+  background-size: 28px 28px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+}
+
+.dark .bg-grid,
+.dark.bg-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+}
+
+/* ── Animations ──────────────────────────────────────────── */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes drift-slow-1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(4%, 3%) scale(1.05); }
+}
+
+@keyframes drift-slow-2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-3%, -4%) scale(1.02); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in {
+  animation: slide-in-right 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2.5s ease-in-out infinite;
+}
+
+@utility animate-drift-1 {
+  animation: drift-slow-1 30s ease-in-out infinite alternate;
+}
+@utility animate-drift-2 {
+  animation: drift-slow-2 35s ease-in-out infinite alternate;
+}
+
+/* ── Premium Glass Card (Developer Console Style) ────────── */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(9, 9, 11, 0.08);
+}
+
+.dark .glass-card {
+  background: rgba(9, 9, 11, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* ── Terminal Console Block ──────────────────────────────── */
+.terminal-block {
+  font-family: var(--font-mono);
+  background: #09090b;
+  border: 1px solid #1f1f23;
+  color: #e4e4e7;
+  padding: 1rem;
+  border-radius: var(--radius-lg);
+}
+
+.light .terminal-block {
+  background: #f4f4f5;
+  border-color: #e4e4e7;
+  color: #18181b;
+}

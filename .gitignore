@@ -9,6 +9,8 @@ build/
 **/build/
 out/
 **/out/
+.next/
+**/.next/
 
 # Test coverage reports
 coverage/

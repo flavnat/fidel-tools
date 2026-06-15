@@ -38,7 +38,7 @@ app.get("/", (c) => {
         name: "fidel-tools-api",
         description:
             "Production-ready OpenAPI-compliant API for Amharic NLP pre-processing",
-        version: "1.0.0",
+        version: "0.1.6",
         status: "operational",
         documentation: "/docs",
         endpoints: {
@@ -54,7 +54,7 @@ app.doc("/openapi.json", {
     openapi: "3.0.0",
     info: {
         title: "ፊደል Tools API",
-        version: "0.1.4",
+        version: "0.1.6",
         description:
             "ፊደል (Fidel) Tools is a developer-first suite of high-performance natural language processing APIs built specifically for Ethiopic languages. This reference provides interactive documentation for our production-grade NLP preprocessing endpoints (normalization, tokenization, stopword removal, morphological stemming, transliteration).",
     },

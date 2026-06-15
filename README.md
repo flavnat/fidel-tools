@@ -2,7 +2,6 @@
   <img height="150" src="./Fidel.png" alt="Fidel Tools logo" />
 </p>
 
-<h1 align="center">Fidel Tools</h1>
 
 <p align="center">
   The most comprehensive, schema-driven NLP pre-processing framework for Amharic.
@@ -37,9 +36,9 @@ Fidel Tools is managed as a monorepo workspace. Check the individual package dir
 
 | Package | Description | Version | Changelog |
 | :--- | :--- | :--- | :--- |
-| [`@fidel-tools/core`](./packages/core) | Core processing pipeline and NLP engine | `0.1.4` | [Changelog](./packages/core/CHANGELOG.md) |
-| [`@fidel-tools/lang-am`](./packages/lang-am) | Amharic language pack & schema configurations | `0.1.4` | [Changelog](./packages/lang-am/CHANGELOG.md) |
-| [`@fidel-tools/validate-pack`](./packages/validate-pack) | CLI tool to validate & fix language packs | `0.1.4` | [Changelog](./packages/validate-pack/CHANGELOG.md) |
+| [`@fidel-tools/core`](./packages/core) | Core processing pipeline and NLP engine | `0.1.6` | [Changelog](./packages/core/CHANGELOG.md) |
+| [`@fidel-tools/lang-am`](./packages/lang-am) | Amharic language pack & schema configurations | `0.1.6` | [Changelog](./packages/lang-am/CHANGELOG.md) |
+| [`@fidel-tools/validate-pack`](./packages/validate-pack) | CLI tool to validate & fix language packs | `0.1.6` | [Changelog](./packages/validate-pack/CHANGELOG.md) |
 
 ---
 
