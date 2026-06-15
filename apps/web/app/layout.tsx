@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AOSProvider } from "@/components/aos-provider";
+import { CountdownBanner } from "@/components/countdown-banner";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -55,7 +56,10 @@ export default function RootLayout({
           <div className="absolute -bottom-[10%] -right-[10%] w-[60vw] h-[60vw] bg-[radial-gradient(circle,rgba(99,102,241,0.06)_0%,transparent_70%)] dark:bg-[radial-gradient(circle,rgba(99,102,241,0.025)_0%,transparent_70%)] blur-[120px] animate-drift-2 transition-all duration-300"></div>
         </div>
         <div className="relative z-10 w-full min-h-screen flex flex-col">
-          <AOSProvider>{children}</AOSProvider>
+          <AOSProvider>
+            <CountdownBanner />
+            {children}
+          </AOSProvider>
         </div>
       </body>
     </html>
