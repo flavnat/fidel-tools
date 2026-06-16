@@ -6,8 +6,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Fidel Tools — Developer Dashboard",
-  description:
-    "Manage your API keys, monitor usage, and build with the premier Amharic NLP toolkit.",
+  description: "API key telemetry, usage logs, and developer infrastructure for the premier Amharic NLP toolkit.",
 };
 
 export default function RootLayout({

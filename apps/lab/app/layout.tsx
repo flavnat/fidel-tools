@@ -5,8 +5,8 @@ import LabShell from "@/components/LabShell";
 import PageLoader from "@/components/PageLoader";
 
 export const metadata: Metadata = {
-  title: "Amharic NLP Lab — Fidel Tools",
-  description: "A full-stack developer console and interactive testground for Amharic NLP pre-processing pipelines.",
+  title: "Fidel Lab — Interactive NLP Console",
+  description: "Interactive playground, transliteration sandbox, and tokenization tools for Amharic language processing.",
 };
 
 export default function RootLayout({
