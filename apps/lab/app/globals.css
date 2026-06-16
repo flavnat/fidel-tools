@@ -1,0 +1,373 @@
+@import "tailwindcss";
+
+/* Override the default dark variant to use a class selector */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@font-face {
+    font-family: "Loga";
+    src: url("/Loga_Light_4c025211ef.ttf") format("truetype");
+    font-weight: 300;
+    font-style: normal;
+}
+
+:root {
+  /* ── Technical Developer Color Palette ────────────────── */
+  --color-primary: #3b82f6;
+  --color-primary-hover: #2563eb;
+  --color-primary-light: #60a5fa;
+
+  --color-surface: #fafafa;
+  --color-surface-elevated: #ffffff;
+  --color-surface-hover: #f5f5f7;
+  --color-surface-border: #e4e4e7;
+  --color-surface-border-subtle: #f5f5f7;
+
+  --color-text-primary: #09090b;
+  --color-text-secondary: #4b5563;
+  --color-text-muted: #71717a;
+  --color-text-inverse: #ffffff;
+
+  --color-success: #10b981;
+  --color-success-bg: #f0fdf4;
+  --color-warning: #f59e0b;
+  --color-warning-bg: #fffbeb;
+  --color-danger: #ef4444;
+  --color-danger-bg: #fef2f2;
+  --color-danger-hover: #dc2626;
+
+  /* Theme-responsive Zinc values for custom classes */
+  --color-zinc-405-val: #71717a;
+  --color-zinc-450-val: #52525b;
+  --color-zinc-550-val: #52525b;
+  --color-zinc-555-val: #52525b;
+  --color-zinc-650-val: #27272a;
+  --color-zinc-805-val: #18181b;
+  --color-zinc-850-val: #27272a;
+
+  /* ── Dark Mode (Zinc Industrial Palette) ──────────────── */
+  --color-dark-surface: #030303;
+  --color-dark-surface-elevated: #060608;
+  --color-dark-surface-hover: #0d0d10;
+  --color-dark-surface-border: #1f1f23;
+  --color-dark-surface-border-subtle: #0d0d10;
+
+  --color-dark-text-primary: #ffffff;
+  --color-dark-text-secondary: #a1a1aa;
+  --color-dark-text-muted: #52525b;
+}
+
+/* Backwards-compatibility for class-based overrides in lab tools */
+.dark {
+  --color-surface: var(--color-dark-surface);
+  --color-surface-elevated: var(--color-dark-surface-elevated);
+  --color-surface-hover: var(--color-dark-surface-hover);
+  --color-surface-border: var(--color-dark-surface-border);
+  --color-surface-border-subtle: var(--color-dark-surface-border-subtle);
+
+  --color-text-primary: var(--color-dark-text-primary);
+  --color-text-secondary: var(--color-dark-text-secondary);
+  --color-text-muted: var(--color-dark-text-muted);
+
+  /* Override responsive Zinc values for perfect contrast in dark mode */
+  --color-zinc-405-val: #a1a1aa;
+  --color-zinc-450-val: #a1a1aa;
+  --color-zinc-550-val: #d4d4d8;
+  --color-zinc-555-val: #a1a1aa;
+  --color-zinc-650-val: #e4e4e7;
+  --color-zinc-805-val: #fafafa;
+  --color-zinc-850-val: #1f1f23;
+}
+
+@theme {
+  --color-primary: var(--color-primary);
+  --color-primary-hover: var(--color-primary-hover);
+  --color-primary-light: var(--color-primary-light);
+
+  --color-surface: var(--color-surface);
+  --color-surface-elevated: var(--color-surface-elevated);
+  --color-surface-hover: var(--color-surface-hover);
+  --color-surface-border: var(--color-surface-border);
+  --color-surface-border-subtle: var(--color-surface-border-subtle);
+
+  --color-text-primary: var(--color-text-primary);
+  --color-text-secondary: var(--color-text-secondary);
+  --color-text-muted: var(--color-text-muted);
+  --color-text-inverse: var(--color-text-inverse);
+
+  /* Map custom utility classes to responsive variables for extreme softness and perfect readability */
+  --color-zinc-405: var(--color-zinc-405-val);
+  --color-zinc-450: var(--color-zinc-450-val);
+  --color-zinc-550: var(--color-zinc-550-val);
+  --color-zinc-555: var(--color-zinc-555-val);
+  --color-zinc-650: var(--color-zinc-650-val);
+  --color-zinc-805: var(--color-zinc-805-val);
+  --color-zinc-850: var(--color-zinc-850-val);
+
+  /* ── Dark Mode mappings 1:1 with Web ── */
+  --color-dark-surface: var(--color-dark-surface);
+  --color-dark-surface-elevated: var(--color-dark-surface-elevated);
+  --color-dark-surface-hover: var(--color-dark-surface-hover);
+  --color-dark-surface-border: var(--color-dark-surface-border);
+  --color-dark-surface-border-subtle: var(--color-dark-surface-border-subtle);
+
+  --color-dark-text-primary: var(--color-dark-text-primary);
+  --color-dark-text-secondary: var(--color-dark-text-secondary);
+  --color-dark-text-muted: var(--color-dark-text-muted);
+
+  /* ── Typography (Standardized 1:1 with Web) ── */
+  --font-loga: "Loga", "Outfit", sans-serif;
+  --font-sans: "Plus Jakarta Sans", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", "Cascadia Code", monospace;
+
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-2xl: none;
+}
+
+/* Base style mapping */
+body {
+  background-color: var(--color-surface);
+  color: var(--color-text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  position: relative;
+}
+
+body.dark,
+.dark body {
+  background-color: #030303;
+  color: #fafafa;
+}
+
+/* Faint noise overlay for high-end developer texturing */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  opacity: 0.018;
+  z-index: 9999;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+.dark body::before {
+  opacity: 0.038;
+}
+
+/* Focus Ring */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--color-primary) !important;
+}
+
+/* Selection Highlight */
+::selection {
+  background: rgba(59, 130, 246, 0.15);
+  color: inherit;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.15);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.3);
+}
+
+/* Technical Grid Overlay Utility */
+@utility bg-grid {
+  background-size: 28px 28px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+}
+
+.dark .bg-grid,
+.dark.bg-grid {
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.012) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.012) 1px, transparent 1px);
+}
+
+/* ── Keyframes (Synchronized 1:1 with Web) ── */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse-soft {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes drift-slow-1 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(4%, 3%) scale(1.05); }
+}
+
+@keyframes drift-slow-2 {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(-3%, -4%) scale(1.02); }
+}
+
+/* Animation Helper classes */
+.animate-fade-in {
+  animation: fade-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-in {
+  animation: slide-in-right 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-pulse-soft {
+  animation: pulse-soft 2.5s ease-in-out infinite;
+}
+
+@utility animate-drift-1 {
+  animation: drift-slow-1 30s ease-in-out infinite alternate;
+}
+@utility animate-drift-2 {
+  animation: drift-slow-2 35s ease-in-out infinite alternate;
+}
+
+/* ── Interactive Onboarding Animations ── */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 rgba(59, 130, 246, 0);
+    border-color: var(--color-surface-border);
+  }
+  50% {
+    box-shadow: 0 0 10px rgba(59, 130, 246, 0.18);
+    border-color: rgba(59, 130, 246, 0.35);
+  }
+}
+
+@keyframes slide-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@utility animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+@utility animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+@utility animate-slide-up {
+  animation: slide-in-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Premium Glass Card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(9, 9, 11, 0.08);
+}
+
+.dark .glass-card {
+  background: rgba(9, 9, 11, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+/* Premium Card (Industrial Minimalism) */
+.premium-card {
+  background-color: var(--color-surface-elevated);
+  border: 1px solid var(--color-surface-border);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.015);
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.premium-card:hover {
+  border-color: rgba(59, 130, 246, 0.15);
+}
+
+.dark .premium-card {
+  background-color: var(--color-dark-surface-elevated);
+  border-color: var(--color-dark-surface-border);
+}
+
+.dark .premium-card:hover {
+  border-color: rgba(59, 130, 246, 0.25);
+}
+
+/* ── Responsive Border Color Utilities to decouple borders from text scale ── */
+@utility border-zinc-200 {
+  border-color: var(--color-surface-border);
+}
+@utility border-zinc-800 {
+  border-color: var(--color-surface-border);
+}
+@utility border-zinc-900 {
+  border-color: var(--color-surface-border);
+}
+

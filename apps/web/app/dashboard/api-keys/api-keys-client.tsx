@@ -132,7 +132,8 @@ export default function ApiKeysClient({
   }
 
   const apiKeyValue = newKey ? newKey.raw : "ft_your_api_key_here";
-  const apiBaseUrl = "http://localhost:3000/api/v1/nlp";
+  const currentOrigin = typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";
+  const apiBaseUrl = `${currentOrigin}/api/v1/nlp`;
 
   const payloads: Record<EndpointOption, { path: string; data: object }> = {
     normalize: {

@@ -1,13 +1,12 @@
 import type { Metadata } from "next";
 import { AOSProvider } from "@/components/aos-provider";
-import { CountdownBanner } from "@/components/countdown-banner";
-import PageLoader from "@/components/PageLoader";
 import "./globals.css";
+import LabShell from "@/components/LabShell";
+import PageLoader from "@/components/PageLoader";
 
 export const metadata: Metadata = {
-  title: "Fidel Tools — Developer Dashboard",
-  description:
-    "Manage your API keys, monitor usage, and build with the premier Amharic NLP toolkit.",
+  title: "Amharic NLP Lab — Fidel Tools",
+  description: "A full-stack developer console and interactive testground for Amharic NLP pre-processing pipelines.",
 };
 
 export default function RootLayout({
@@ -48,22 +47,22 @@ export default function RootLayout({
           })();
         `}} />
       </head>
-      <body suppressHydrationWarning className="min-h-screen antialiased relative text-slate-900 dark:text-zinc-555 transition-colors duration-300">
+      <body suppressHydrationWarning className="min-h-screen antialiased relative text-zinc-900 dark:text-zinc-300 transition-colors duration-300">
         <PageLoader />
         
-        {/* Background elements wrapped to prevent scrolling */}
+        {/* Background elements mirroring apps/web */}
         <div className="fixed inset-0 overflow-hidden pointer-events-none z-0">
           <div className="bg-grid absolute inset-0 text-slate-900/[0.025] dark:text-white/[0.012] transition-colors duration-300"></div>
-          {/* Faint industrial ambient lighting */}
-          <div className="absolute -top-[10%] -left-[10%] w-[60vw] h-[60vw] bg-[radial-gradient(circle,rgba(59,130,246,0.06)_0%,transparent_70%)] dark:bg-[radial-gradient(circle,rgba(59,130,246,0.035)_0%,transparent_70%)] blur-[100px] animate-drift-1 transition-all duration-300"></div>
-          <div className="absolute -bottom-[10%] -right-[10%] w-[60vw] h-[60vw] bg-[radial-gradient(circle,rgba(99,102,241,0.06)_0%,transparent_70%)] dark:bg-[radial-gradient(circle,rgba(99,102,241,0.025)_0%,transparent_70%)] blur-[120px] animate-drift-2 transition-all duration-300"></div>
+          <div className="absolute -top-[10%] -left-[10%] w-[60vw] h-[60vw] bg-[radial-gradient(circle,rgba(59,130,246,0.06)_0%,transparent_70%)] dark:bg-[radial-gradient(circle,rgba(59,130,246,0.035)_0%,transparent_70%)] blur-[100px] transition-all duration-300"></div>
+          <div className="absolute -bottom-[10%] -right-[10%] w-[60vw] h-[60vw] bg-[radial-gradient(circle,rgba(99,102,241,0.06)_0%,transparent_70%)] dark:bg-[radial-gradient(circle,rgba(99,102,241,0.025)_0%,transparent_70%)] blur-[120px] transition-all duration-300"></div>
         </div>
+
         <div className="relative z-10 w-full min-h-screen flex flex-col">
           <AOSProvider>
-            <CountdownBanner />
-            {children}
+            <LabShell>{children}</LabShell>
           </AOSProvider>
         </div>
+
       </body>
     </html>
   );

@@ -9,22 +9,22 @@ const amPack = JSON.parse(
 const amh_testWords_input = [
   "ወንበር",
   "ወንበሬ",
-  "ወንበርህ ",
-  "ወንበርሽ ",
-  "ወንበሩ ",
+  "ወንበርህ",
+  "ወንበርሽ",
+  "ወንበሩ",
   "ወንበሯ",
-  "ወንበራችን ",
+  "ወንበራችን",
   "ወንበራችሁ",
-  "ወንበራቸው ",
+  "ወንበራቸው",
   "ወንበሮች",
   "ወንበሮቼ",
   "ወንበሮችህ",
   "ወንበሮችሽ",
   "ወንበሮቹ",
   "ወንበሮቿ",
-  "ወንበሮቻችን ",
+  "ወንበሮቻችን",
   "ወንበሮቻችሁ",
-  "ወንበሮቻቸው ",
+  "ወንበሮቻቸው",
   "ልጅ",
   "የልጅ",
   "ልጆች",
@@ -183,4 +183,14 @@ test("Amharic to ASCII transliterator", () => {
 
     expect(transliterate.felig_transliterate(english, "en", amPack)).toBe(amh_output)
   }
+})
+
+test("Preserves whitespace and punctuation during transliteration", () => {
+  const amh_input = "ወንበር ልጅ ቤቶች።"
+  const expected_en = "wenber lj bEtoc።"
+  expect(transliterate.felig_transliterate(amh_input, "am", amPack)).toBe(expected_en)
+
+  const en_input = "wenber lj bEtoc።"
+  const expected_amh = "ወንብኧር ልጅ ቤቶች።"
+  expect(transliterate.felig_transliterate(en_input, "en", amPack)).toBe(expected_amh)
 })
