@@ -5,11 +5,8 @@ import React, { useEffect, useState } from "react";
 export default function PageLoader() {
     const [progress, setProgress] = useState(0);
     const [visible, setVisible] = useState(true);
-    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
-        setMounted(true);
-
         // Simulate loading progress
         const duration = 1600; // 1.6 seconds
         const intervalTime = 25;
@@ -29,7 +26,7 @@ export default function PageLoader() {
         return () => clearInterval(timer);
     }, []);
 
-    if (!mounted || !visible) return null;
+    if (!visible) return null;
 
     return (
         <div
